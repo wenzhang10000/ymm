@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小红书封面生成器</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #ff7b9c;
+            --secondary-color: #ffdde1;
+            --accent-color: #9c89b8;
+            --text-color: #333333;
+            --bg-color: #fff6f8;
+            --highlight-color: #ff4772;
+            --ip-color: #ff6b6b;
+            --light-color: #5ca0f2;
+            --test-color: #ffc75f;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            max-width: 100%;
+        }
+        
+        .cover-container {
+            width: 600px;
+            height: 800px;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        #cover {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+            background: linear-gradient(135deg, var(--bg-color), var(--secondary-color));
+        }
+        
+        .notebook-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.1;
+            background-image: repeating-linear-gradient(transparent, transparent 39px, var(--primary-color) 40px);
+        }
+        
+        .title-container {
+            margin-bottom: 30px;
+            z-index: 2;
+        }
+        
+        .main-title {
+            font-size: 64px;
+            font-weight: 900;
+            line-height: 1.2;
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+        
+        .highlight {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .highlight-ip {
+            color: var(--ip-color);
+        }
+        
+        .highlight-ip::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            height: 12px;
+            background-color: rgba(255, 107, 107, 0.2);
+            z-index: -1;
+            border-radius: 4px;
+        }
+        
+        .highlight-light {
+            color: var(--light-color);
+        }
+        
+        .highlight-light::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            height: 12px;
+            background-color: rgba(92, 160, 242, 0.2);
+            z-index: -1;
+            border-radius: 4px;
+        }
+        
+        .highlight-test {
+            color: var(--test-color);
+        }
+        
+        .highlight-test::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            height: 12px;
+            background-color: rgba(255, 199, 95, 0.2);
+            z-index: -1;
+            border-radius: 4px;
+        }
+        
+        .subtitle {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 30px;
+        }
+        
+        .formula {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 24px;
+            margin-top: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .content {
+            font-size: 22px;
+            line-height: 1.6;
+            color: var(--text-color);
+            margin-bottom: 40px;
+            z-index: 2;
+        }
+        
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .tag {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .tag-ip {
+            background-color: var(--ip-color);
+        }
+        
+        .tag-light {
+            background-color: var(--light-color);
+        }
+        
+        .tag-test {
+            background-color: var(--test-color);
+            color: var(--text-color);
+        }
+        
+        .emoji-decoration {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            font-size: 80px;
+            z-index: 1;
+        }
+        
+        .circle-decoration {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(255, 123, 156, 0.2), rgba(156, 137, 184, 0.2));
+            top: -50px;
+            right: -50px;
+            z-index: 1;
+        }
+        
+        .circle-decoration-2 {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(156, 137, 184, 0.2), rgba(255, 123, 156, 0.2));
+            bottom: -30px;
+            left: -30px;
+            z-index: 1;
+        }
+        
+        .save-btn {
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .save-btn:hover {
+            background-color: var(--highlight-color);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="cover-container">
+            <div id="cover">
+                <div class="notebook-lines"></div>
+                <div class="circle-decoration"></div>
+                <div class="circle-decoration-2"></div>
+                
+                <div class="title-container">
+                    <div class="main-title">
+                        一人企业<br>
+                        <span class="highlight highlight-ip">IP</span>+<span class="highlight highlight-light">轻量</span>+<span class="highlight highlight-test">试错</span>
+                    </div>
+                    <div class="subtitle">5大复利法则 ✨</div>
+                    <div class="formula">= 持续变现！</div>
+                </div>
+                
+                <div class="content">
+                    <p><strong>认知破局</strong>：让用户"看见"你 ✓</p>
+                    <p><strong>IP体系化</strong>：短视频引流+公众号输出 👉</p>
+                    <p><strong>产品商业化</strong>：低价量跑+高客单组合 💼</p>
+                    <p><strong>效率法则</strong>：时间定价+主动聚焦 ⏱️</p>
+                    <p><strong>行动力法则</strong>：持续试错+优化迭代✨</p>
+                </div>
+                
+                <div class="tag-container">
+                    <div class="tag tag-ip">认知破局</div>
+                    <div class="tag tag-light">IP体系化</div>
+                    <div class="tag">产品商业化</div>
+                    <div class="tag tag-test">效率法则</div>
+                    <div class="tag" style="background-color: #8e44ad; color: white;">行动力法则</div>
+                </div>
+                
+                <div class="" style="font-size: small;">0329 IDO老徐合伙人合肥线下会 [复盘] 050文章</div>
+            </div>
+        </div>
+        
+        <button class="save-btn" onclick="saveAsImage()">
+            <i class="fas fa-download"></i> 保存封面
+        </button>
+    </div>
+
+    <script>
+        function saveAsImage() {
+            const cover = document.getElementById('cover');
+            
+            html2canvas(cover, {
+                scale: 2,
+                useCORS: true,
+                logging: false
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = '小红书封面.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+    </script>
+</body>
+</html>
