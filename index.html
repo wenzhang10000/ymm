@@ -3,308 +3,816 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小红书封面生成器</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <title>小升初课程表 - 预见未来</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                    },
+                },
+            },
+        }
+    </script>
     <style>
-        :root {
-            --primary-color: #ff7b9c;
-            --secondary-color: #ffdde1;
-            --accent-color: #9c89b8;
-            --text-color: #333333;
-            --bg-color: #fff6f8;
-            --highlight-color: #ff4772;
-            --ip-color: #ff6b6b;
-            --light-color: #5ca0f2;
-            --test-color: #ffc75f;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
         
         body {
             font-family: 'Noto Sans SC', sans-serif;
-            background-color: #f5f5f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
         }
         
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            max-width: 100%;
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: 100px repeat(7, 1fr);
+            gap: 1px;
         }
         
-        .cover-container {
-            width: 600px;
-            height: 800px;
-            position: relative;
-            overflow: hidden;
-            background: var(--bg-color);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        .calendar-header {
+            grid-column: span 8;
         }
         
-        #cover {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            padding: 40px;
-            background: linear-gradient(135deg, var(--bg-color), var(--secondary-color));
+        .time-slot {
+            grid-column: 1;
         }
         
-        .notebook-lines {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            opacity: 0.1;
-            background-image: repeating-linear-gradient(transparent, transparent 39px, var(--primary-color) 40px);
+        .english-class {
+            background-color: rgba(219, 234, 254, var(--tw-bg-opacity));
+            border-left: 4px solid rgba(59, 130, 246, var(--tw-border-opacity));
         }
         
-        .title-container {
-            margin-bottom: 30px;
-            z-index: 2;
+        .math-class {
+            background-color: rgba(254, 226, 226, var(--tw-bg-opacity));
+            border-left: 4px solid rgba(239, 68, 68, var(--tw-border-opacity));
         }
         
-        .main-title {
-            font-size: 64px;
-            font-weight: 900;
-            line-height: 1.2;
-            color: var(--text-color);
-            margin-bottom: 20px;
+        .chinese-class {
+            background-color: rgba(220, 252, 231, var(--tw-bg-opacity));
+            border-left: 4px solid rgba(34, 197, 94, var(--tw-border-opacity));
         }
         
-        .highlight {
-            position: relative;
-            display: inline-block;
+        .dark .english-class {
+            background-color: rgba(30, 58, 138, 0.3);
+            border-left: 4px solid rgba(59, 130, 246, var(--tw-border-opacity));
         }
         
-        .highlight-ip {
-            color: var(--ip-color);
+        .dark .math-class {
+            background-color: rgba(153, 27, 27, 0.3);
+            border-left: 4px solid rgba(239, 68, 68, var(--tw-border-opacity));
         }
         
-        .highlight-ip::after {
-            content: '';
-            position: absolute;
-            bottom: 5px;
-            left: 0;
-            width: 100%;
-            height: 12px;
-            background-color: rgba(255, 107, 107, 0.2);
-            z-index: -1;
-            border-radius: 4px;
+        .dark .chinese-class {
+            background-color: rgba(20, 83, 45, 0.3);
+            border-left: 4px solid rgba(34, 197, 94, var(--tw-border-opacity));
         }
         
-        .highlight-light {
-            color: var(--light-color);
+        .class-card {
+            transition: all 0.2s ease;
         }
         
-        .highlight-light::after {
-            content: '';
-            position: absolute;
-            bottom: 5px;
-            left: 0;
-            width: 100%;
-            height: 12px;
-            background-color: rgba(92, 160, 242, 0.2);
-            z-index: -1;
-            border-radius: 4px;
+        .class-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 10;
         }
         
-        .highlight-test {
-            color: var(--test-color);
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out;
         }
         
-        .highlight-test::after {
-            content: '';
-            position: absolute;
-            bottom: 5px;
-            left: 0;
-            width: 100%;
-            height: 12px;
-            background-color: rgba(255, 199, 95, 0.2);
-            z-index: -1;
-            border-radius: 4px;
-        }
-        
-        .subtitle {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--accent-color);
-            margin-bottom: 30px;
-        }
-        
-        .formula {
-            display: inline-block;
-            background-color: rgba(255, 255, 255, 0.7);
-            padding: 8px 16px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 24px;
-            margin-top: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        }
-        
-        .content {
-            font-size: 22px;
-            line-height: 1.6;
-            color: var(--text-color);
-            margin-bottom: 40px;
-            z-index: 2;
-        }
-        
-        .tag-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .tag {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 18px;
-            font-weight: 700;
-        }
-        
-        .tag-ip {
-            background-color: var(--ip-color);
-        }
-        
-        .tag-light {
-            background-color: var(--light-color);
-        }
-        
-        .tag-test {
-            background-color: var(--test-color);
-            color: var(--text-color);
-        }
-        
-        .emoji-decoration {
-            position: absolute;
-            bottom: 30px;
-            right: 40px;
-            font-size: 80px;
-            z-index: 1;
-        }
-        
-        .circle-decoration {
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, rgba(255, 123, 156, 0.2), rgba(156, 137, 184, 0.2));
-            top: -50px;
-            right: -50px;
-            z-index: 1;
-        }
-        
-        .circle-decoration-2 {
-            position: absolute;
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, rgba(156, 137, 184, 0.2), rgba(255, 123, 156, 0.2));
-            bottom: -30px;
-            left: -30px;
-            z-index: 1;
-        }
-        
-        .save-btn {
-            padding: 12px 24px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .save-btn:hover {
-            background-color: var(--highlight-color);
-            transform: translateY(-2px);
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="cover-container">
-            <div id="cover">
-                <div class="notebook-lines"></div>
-                <div class="circle-decoration"></div>
-                <div class="circle-decoration-2"></div>
-                
-                <div class="title-container">
-                    <div class="main-title">
-                        一人企业<br>
-                        <span class="highlight highlight-ip">IP</span>+<span class="highlight highlight-light">轻量</span>+<span class="highlight highlight-test">试错</span>
-                    </div>
-                    <div class="subtitle">5大复利法则 ✨</div>
-                    <div class="formula">= 持续变现！</div>
+<body class="bg-gray-50 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <div class="min-h-screen flex flex-col">
+        <!-- 导航栏 -->
+        <header class="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+                <h1 class="text-xl font-bold text-gray-900 dark:text-white flex items-center">
+                    <i class="fas fa-calendar-alt mr-2 text-primary-600 dark:text-primary-400"></i>
+                    小升初课程表
+                </h1>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-moon text-gray-600 dark:hidden"></i>
+                        <i class="fas fa-sun text-yellow-300 hidden dark:block"></i>
+                    </button>
                 </div>
-                
-                <div class="content">
-                    <p><strong>认知破局</strong>：让用户"看见"你 ✓</p>
-                    <p><strong>IP体系化</strong>：短视频引流+公众号输出 👉</p>
-                    <p><strong>产品商业化</strong>：低价量跑+高客单组合 💼</p>
-                    <p><strong>效率法则</strong>：时间定价+主动聚焦 ⏱️</p>
-                    <p><strong>行动力法则</strong>：持续试错+优化迭代✨</p>
-                </div>
-                
-                <div class="tag-container">
-                    <div class="tag tag-ip">认知破局</div>
-                    <div class="tag tag-light">IP体系化</div>
-                    <div class="tag">产品商业化</div>
-                    <div class="tag tag-test">效率法则</div>
-                    <div class="tag" style="background-color: #8e44ad; color: white;">行动力法则</div>
-                </div>
-                
-                <div class="" style="font-size: small;">0329 IDO老徐合伙人合肥线下会 [复盘] 050文章</div>
             </div>
-        </div>
-        
-        <button class="save-btn" onclick="saveAsImage()">
-            <i class="fas fa-download"></i> 保存封面
-        </button>
+        </header>
+
+        <!-- 主内容区 -->
+        <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+            <!-- 课表说明 -->
+            <div class="mb-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 animate-fade-in">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">课程表说明</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 bg-blue-200 dark:bg-blue-900 border-l-4 border-blue-500 mr-2"></div>
+                        <span class="text-gray-700 dark:text-gray-300">英语</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 bg-red-200 dark:bg-red-900 border-l-4 border-red-500 mr-2"></div>
+                        <span class="text-gray-700 dark:text-gray-300">数学</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 bg-green-200 dark:bg-green-900 border-l-4 border-green-500 mr-2"></div>
+                        <span class="text-gray-700 dark:text-gray-300">语文</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 周次选择器 -->
+            <div class="mb-6 flex flex-wrap justify-between items-center">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">课程安排</h2>
+                <div class="flex space-x-2 mt-2 sm:mt-0 overflow-x-auto pb-2">
+                    <button class="week-btn px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors" data-week="1">第一周</button>
+                    <button class="week-btn px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" data-week="2">第二周</button>
+                    <button class="week-btn px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" data-week="3">第三周</button>
+                    <button class="week-btn px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" data-week="4">第四周</button>
+                    <button class="week-btn px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" data-week="5">第五周</button>
+                    <button class="week-btn px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" data-week="6">第六周</button>
+                </div>
+            </div>
+
+            <!-- 课表 -->
+            <div class="overflow-x-auto">
+                <div class="calendar-container min-w-[800px]">
+                    <!-- 第一周 -->
+                    <div class="week-calendar" id="week-1">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                            <div class="calendar-grid">
+                                <!-- 表头 -->
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center calendar-header">
+                                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">第一周 (6月23日-6月29日)</h3>
+                                </div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">时间段</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周一<br>6月23日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周二<br>6月24日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周三<br>6月25日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周四<br>6月26日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周五<br>6月27日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周六<br>6月28日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周日<br>6月29日</div>
+
+                                <!-- 上午 7:50-9:50 -->
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 time-slot">
+                                    <div class="font-medium">上午</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">7:50-9:50</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card english-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">英语（1）</div>
+                                    </div>
+                                </div>
+
+                                <!-- 上午 10:10-12:10 -->
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 time-slot">
+                                    <div class="font-medium">上午</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">10:10-12:10</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card math-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">数学（1）</div>
+                                    </div>
+                                </div>
+
+                                <!-- 下午 14:00-16:00 -->
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 time-slot">
+                                    <div class="font-medium">下午</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">14:00-16:00</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card chinese-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">语文（1）</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 第二周 -->
+                    <div class="week-calendar hidden" id="week-2">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                            <div class="calendar-grid">
+                                <!-- 表头 -->
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center calendar-header">
+                                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">第二周 (6月30日-7月6日)</h3>
+                                </div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">时间段</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周一<br>6月30日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周二<br>7月1日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周三<br>7月2日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周四<br>7月3日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周五<br>7月4日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周六<br>7月5日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周日<br>7月6日</div>
+
+                                <!-- 上午 7:50-9:50 -->
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 time-slot">
+                                    <div class="font-medium">上午</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">7:50-9:50</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card english-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">英语（2）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card english-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">英语（3）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card english-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">英语（4）</div>
+                                    </div>
+                                </div>
+
+                                <!-- 上午 10:10-12:10 -->
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 time-slot">
+                                    <div class="font-medium">上午</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">10:10-12:10</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card math-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">数学（2）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card math-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">数学（3）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card math-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">数学（4）</div>
+                                    </div>
+                                </div>
+
+                                <!-- 下午 14:00-16:00 -->
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 time-slot">
+                                    <div class="font-medium">下午</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">14:00-16:00</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card chinese-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">语文（2）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card chinese-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">语文（3）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card chinese-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">语文（4）</div>
+                                    </div>
+                                </div>
+
+                                <!-- 下午 14:00-16:00 -->
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 time-slot">
+                                    <div class="font-medium">下午</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">14:00-16:00</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card chinese-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">语文（10）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card chinese-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">语文（11）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card chinese-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">语文（12）</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 第三周 -->
+                    <div class="week-calendar hidden" id="week-3">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                            <div class="calendar-grid">
+                                <!-- 表头 -->
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center calendar-header">
+                                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">第三周 (7月7日-7月13日)</h3>
+                                </div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">时间段</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周一<br>7月7日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周二<br>7月8日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周三<br>7月9日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周四<br>7月10日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周五<br>7月11日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周六<br>7月12日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周日<br>7月13日</div>
+
+                                <!-- 上午 7:50-9:50 -->
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 time-slot">
+                                    <div class="font-medium">上午</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">7:50-9:50</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card english-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">英语（5）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card english-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">英语（6）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card english-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">英语（7）</div>
+                                    </div>
+                                </div>
+
+                                <!-- 上午 10:10-12:10 -->
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 time-slot">
+                                    <div class="font-medium">上午</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">10:10-12:10</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card math-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">数学（5）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card math-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">数学（6）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card math-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">数学（7）</div>
+                                    </div>
+                                </div>
+
+                                <!-- 下午 14:00-16:00 -->
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 time-slot">
+                                    <div class="font-medium">下午</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">14:00-16:00</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card chinese-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">语文（5）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card chinese-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">语文（6）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card chinese-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">语文（7）</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 第四周 -->
+                    <div class="week-calendar hidden" id="week-4">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                            <div class="calendar-grid">
+                                <!-- 表头 -->
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center calendar-header">
+                                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">第四周 (7月14日-7月20日)</h3>
+                                </div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">时间段</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周一<br>7月14日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周二<br>7月15日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周三<br>7月16日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周四<br>7月17日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周五<br>7月18日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周六<br>7月19日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周日<br>7月20日</div>
+
+                                <!-- 上午 7:50-9:50 -->
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 time-slot">
+                                    <div class="font-medium">上午</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">7:50-9:50</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card english-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">英语（8）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card english-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">英语（9）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card english-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">英语（10）</div>
+                                    </div>
+                                </div>
+
+                                <!-- 上午 10:10-12:10 -->
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 time-slot">
+                                    <div class="font-medium">上午</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">10:10-12:10</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card math-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">数学（8）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card math-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">数学（9）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card math-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">数学（10）</div>
+                                    </div>
+                                </div>
+
+                                <!-- 下午 14:00-16:00 -->
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 time-slot">
+                                    <div class="font-medium">下午</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">14:00-16:00</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card chinese-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">语文（8）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card chinese-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">语文（9）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card chinese-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">语文（12）</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 第五周 -->
+                    <div class="week-calendar hidden" id="week-5">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                            <div class="calendar-grid">
+                                <!-- 表头 -->
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center calendar-header">
+                                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">第五周 (7月21日-7月27日)</h3>
+                                </div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">时间段</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周一<br>7月21日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周二<br>7月22日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周三<br>7月23日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周四<br>7月24日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周五<br>7月25日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周六<br>7月26日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周日<br>7月27日</div>
+
+                                <!-- 上午 7:50-9:50 -->
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 time-slot">
+                                    <div class="font-medium">上午</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">7:50-9:50</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card english-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">英语（11）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card english-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">英语（12）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card english-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">英语（13）</div>
+                                    </div>
+                                </div>
+
+                                <!-- 上午 10:10-12:10 -->
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 time-slot">
+                                    <div class="font-medium">上午</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">10:10-12:10</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card math-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">数学（11）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card math-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">数学（12）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card math-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">数学（13）</div>
+                                    </div>
+                                </div>
+
+                                <!-- 下午 14:00-16:00 -->
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 time-slot">
+                                    <div class="font-medium">下午</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">14:00-16:00</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card chinese-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">语文（11）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card chinese-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">语文（14）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card chinese-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">语文（13）</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 第六周 -->
+                    <div class="week-calendar hidden" id="week-6">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                            <div class="calendar-grid">
+                                <!-- 表头 -->
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center calendar-header">
+                                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">第六周 (7月28日-8月3日)</h3>
+                                </div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">时间段</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周一<br>7月28日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周二<br>7月29日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周三<br>7月30日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周四<br>7月31日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周五<br>8月1日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周六<br>8月2日</div>
+                                <div class="bg-gray-100 dark:bg-gray-700 p-4 font-medium text-center">周日<br>8月3日</div>
+
+                                <!-- 上午 7:50-9:50 -->
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 time-slot">
+                                    <div class="font-medium">上午</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">7:50-9:50</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card english-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">英语（14）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card english-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">英语（15）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+
+                                <!-- 上午 10:10-12:10 -->
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 time-slot">
+                                    <div class="font-medium">上午</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">10:10-12:10</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card math-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">数学（14）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card math-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">数学（15）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+
+                                <!-- 下午 14:00-16:00 -->
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 time-slot">
+                                    <div class="font-medium">下午</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">14:00-16:00</div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card chinese-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">语文（14）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="class-card chinese-class p-2 rounded-md shadow-sm">
+                                        <div class="font-medium">语文（15）</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                                <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700"></div>
+                            </div>
+                        </div>
+                    </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="bg-white dark:bg-gray-800 shadow-inner py-8 mt-8">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="mb-4 md:mb-0">
+                        <h3 class="text-lg font-semibold mb-2">作者信息</h3>
+                        <p class="text-gray-600 dark:text-gray-400">作者姓名: 文章</p>
+                        <div class="mt-2">
+                            <a href="https://t.zsxq.com/zX3Zr" target="_blank" class="text-primary-600 dark:text-primary-400 hover:underline flex items-center">
+                                <i class="fas fa-users mr-2"></i> 知识星球
+                            </a>
+                        </div>
+                    </div>
+                    <div class="text-center md:text-right">
+                        <p class="text-gray-600 dark:text-gray-400">版权信息：业美美信息/2025</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-500 mt-2">小升初课程表 - 育见未来</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
 
     <script>
-        function saveAsImage() {
-            const cover = document.getElementById('cover');
-            
-            html2canvas(cover, {
-                scale: 2,
-                useCORS: true,
-                logging: false
-            }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = '小红书封面.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-            });
+        // 深色模式切换
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        
+        // 检查系统偏好
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
         }
+        
+        // 切换按钮事件
+        themeToggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 添加淡入动画
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.calendar-grid, h2, h3');
+            elements.forEach(el => {
+                el.classList.add('fade-in');
+            });
+        });
+        
+        // 添加课程卡片悬停效果
+        const classCards = document.querySelectorAll('.class-card');
+        classCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'scale(1.02)';
+                card.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+                card.style.zIndex = '10';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+                card.style.boxShadow = '';
+                card.style.zIndex = '';
+            });
+        });
+        
+        // 周次切换功能
+        const weekBtns = document.querySelectorAll('.week-btn');
+        const weekCalendars = document.querySelectorAll('.week-calendar');
+        
+        weekBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // 移除所有按钮的活跃状态
+                weekBtns.forEach(b => {
+                    b.classList.remove('bg-primary-600', 'text-white');
+                    b.classList.add('bg-white', 'dark:bg-gray-800', 'text-gray-700', 'dark:text-gray-300');
+                });
+                
+                // 添加当前按钮的活跃状态
+                btn.classList.remove('bg-white', 'dark:bg-gray-800', 'text-gray-700', 'dark:text-gray-300');
+                btn.classList.add('bg-primary-600', 'text-white');
+                
+                // 隐藏所有周次日历
+                weekCalendars.forEach(calendar => {
+                    calendar.classList.add('hidden');
+                });
+                
+                // 显示当前选中的周次日历
+                const weekNum = btn.getAttribute('data-week');
+                const targetCalendar = document.getElementById(`week-${weekNum}`);
+                if (targetCalendar) {
+                    targetCalendar.classList.remove('hidden');
+                }
+            });
+        });
     </script>
 </body>
 </html>
