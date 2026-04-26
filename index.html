@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>业美美 — AI赋能中小企业数字化运营</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+
+    /* Custom gradient & animations */
+    .hero-gradient {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f4c81 100%);
+    }
+    .accent-gradient {
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+    }
+    .card-hover {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(59,130,246,0.15);
+    }
+    .glow-blue {
+      box-shadow: 0 0 30px rgba(59,130,246,0.3);
+    }
+    .text-gradient {
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .nav-blur {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    .float-anim { animation: float 4s ease-in-out infinite; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in-up { animation: fadeInUp 0.7s ease forwards; }
+
+    .divider-wave {
+      width: 100%;
+      overflow: hidden;
+      line-height: 0;
+    }
+    .tag-pill {
+      background: rgba(59,130,246,0.12);
+      border: 1px solid rgba(59,130,246,0.3);
+      color: #60a5fa;
+    }
+    .step-line::after {
+      content: '';
+      position: absolute;
+      top: 28px;
+      left: 50%;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      z-index: 0;
+    }
+    .step-line:last-child::after { display: none; }
+
+    /* WeChat green accent */
+    .wechat-green { color: #07c160; }
+    .wechat-bg { background: rgba(7,193,96,0.1); border: 1px solid rgba(7,193,96,0.3); }
+  </style>
+</head>
+<body class="bg-gray-950 text-white font-sans" x-data="{ mobileOpen: false, activeTab: 0 }">
+
+  <!-- ========== NAV ========== -->
+  <nav class="fixed top-0 left-0 right-0 z-50 nav-blur bg-gray-950/80 border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg accent-gradient flex items-center justify-center text-white font-bold text-sm">业</div>
+          <span class="font-bold text-lg tracking-tight">业美美</span>
+        </div>
+        <!-- Desktop Nav -->
+        <div class="hidden md:flex items-center gap-8 text-sm text-gray-300">
+          <a href="#product" class="hover:text-white transition-colors">产品服务</a>
+          <a href="#solution" class="hover:text-white transition-colors">解决方案</a>
+          <a href="#how" class="hover:text-white transition-colors">如何运作</a>
+          <a href="#cases" class="hover:text-white transition-colors">客户案例</a>
+          <a href="#contact" class="px-4 py-1.5 rounded-full accent-gradient text-white text-sm font-medium hover:opacity-90 transition-opacity">免费咨询</a>
+        </div>
+        <!-- Mobile menu btn -->
+        <button @click="mobileOpen = !mobileOpen" class="md:hidden p-2 text-gray-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x-show="!mobileOpen" d="M4 6h16M4 12h16M4 18h16"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x-show="mobileOpen" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div x-show="mobileOpen" x-transition class="md:hidden border-t border-white/10 bg-gray-950/95 px-6 py-4 flex flex-col gap-4 text-sm text-gray-300">
+      <a href="#product" @click="mobileOpen=false" class="hover:text-white">产品服务</a>
+      <a href="#solution" @click="mobileOpen=false" class="hover:text-white">解决方案</a>
+      <a href="#how" @click="mobileOpen=false" class="hover:text-white">如何运作</a>
+      <a href="#cases" @click="mobileOpen=false" class="hover:text-white">客户案例</a>
+      <a href="#contact" @click="mobileOpen=false" class="text-blue-400 font-medium">免费咨询 →</a>
+    </div>
+  </nav>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero-gradient min-h-screen flex items-center pt-16 relative overflow-hidden">
+    <!-- Background decorations -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute top-20 right-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-20 left-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/5 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <!-- Left: Copy -->
+        <div class="fade-in-up">
+          <div class="inline-flex items-center gap-2 tag-pill px-3 py-1 rounded-full text-xs mb-6">
+            <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
+            AI × 数字化 × 微信生态 · 一体化运营平台
+          </div>
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
+            让 AI 成为<br/>
+            <span class="text-gradient">中小企业老板</span><br/>
+            最强运营助手
+          </h1>
+          <p class="text-gray-300 text-lg leading-relaxed mb-8 max-w-xl">
+            依托 <strong class="text-white">AI本地知识库管理</strong> + <strong class="text-white">品牌数字化运营系统</strong>，
+            融合微信生态应用与SAAS小程序，帮助中小微企业提升内部运营效率，沉淀客户案例库价值，实现持续增长。
+          </p>
+          <div class="flex flex-wrap gap-4">
+            <a href="#contact" class="px-6 py-3 rounded-xl accent-gradient text-white font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-blue-500/25">
+              免费体验 →
+            </a>
+            <a href="#product" class="px-6 py-3 rounded-xl border border-white/20 text-white font-semibold hover:bg-white/10 transition-colors">
+              了解产品
+            </a>
+          </div>
+
+          <!-- Stats -->
+          <div class="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-white/10">
+            <div>
+              <div class="text-3xl font-bold text-gradient">100+</div>
+              <div class="text-gray-400 text-sm mt-1">服务企业</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-gradient">80%</div>
+              <div class="text-gray-400 text-sm mt-1">运营提效</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-gradient">3×</div>
+              <div class="text-gray-400 text-sm mt-1">案例价值增长</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Visual -->
+        <div class="hidden lg:flex justify-center items-center">
+          <div class="float-anim relative">
+            <!-- Central card -->
+            <div class="w-80 bg-gray-800/60 border border-white/10 rounded-2xl p-6 glow-blue backdrop-blur-sm">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-xl accent-gradient flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                </div>
+                <div>
+                  <div class="text-sm font-semibold">AI知识库助手</div>
+                  <div class="text-xs text-gray-400">实时响应 · 精准检索</div>
+                </div>
+              </div>
+              <div class="space-y-2 text-xs text-gray-300">
+                <div class="bg-blue-500/10 border border-blue-500/20 rounded-lg p-2">🔍 查询：最新客户案例有哪些？</div>
+                <div class="bg-gray-700/50 rounded-lg p-2">✅ 已找到 12 个匹配案例，按行业分类整理完成</div>
+                <div class="bg-blue-500/10 border border-blue-500/20 rounded-lg p-2">📊 生成品牌传播素材中...</div>
+                <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-2 text-emerald-400">✨ 已推送至微信小程序，客户可查看</div>
+              </div>
+            </div>
+            <!-- Floating tags -->
+            <div class="absolute -top-8 -right-8 wechat-bg px-3 py-1.5 rounded-full text-xs wechat-green font-medium">微信生态 ✓</div>
+            <div class="absolute -bottom-6 -left-6 tag-pill px-3 py-1.5 rounded-full text-xs">SAAS小程序 ✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PAIN POINTS ========== -->
+  <section class="bg-gray-900 py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-14">
+        <div class="inline-block tag-pill px-3 py-1 rounded-full text-xs mb-4">痛点识别</div>
+        <h2 class="text-3xl sm:text-4xl font-bold">中小企业老板，你是否正在经历这些？</h2>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Pain point cards -->
+        <div class="bg-gray-800/50 border border-red-500/20 rounded-2xl p-6 card-hover">
+          <div class="text-3xl mb-3">😤</div>
+          <h3 class="font-semibold text-red-400 mb-2">知识散落、查询低效</h3>
+          <p class="text-sm text-gray-400">员工问题反复问，资料东拼西凑，核心业务知识全靠"老人"口头传递，一旦人员流动就断档。</p>
+        </div>
+        <div class="bg-gray-800/50 border border-orange-500/20 rounded-2xl p-6 card-hover">
+          <div class="text-3xl mb-3">📉</div>
+          <h3 class="font-semibold text-orange-400 mb-2">案例沉睡、价值浪费</h3>
+          <p class="text-sm text-gray-400">做了很多客户项目，却没有系统沉淀。好案例找不到、用不上，无法转化为品牌传播资产。</p>
+        </div>
+        <div class="bg-gray-800/50 border border-yellow-500/20 rounded-2xl p-6 card-hover">
+          <div class="text-3xl mb-3">🔧</div>
+          <h3 class="font-semibold text-yellow-400 mb-2">数字化工具割裂</h3>
+          <p class="text-sm text-gray-400">用着七八个互不打通的软件，数据孤岛严重，管理层无法实时掌握全局经营状态。</p>
+        </div>
+        <div class="bg-gray-800/50 border border-purple-500/20 rounded-2xl p-6 card-hover">
+          <div class="text-3xl mb-3">📱</div>
+          <h3 class="font-semibold text-purple-400 mb-2">微信私域难以运营</h3>
+          <p class="text-sm text-gray-400">客户都在微信里，但没有专业工具支撑，品牌内容触达效率低，客户复购和口碑裂变无从实现。</p>
+        </div>
+        <div class="bg-gray-800/50 border border-pink-500/20 rounded-2xl p-6 card-hover">
+          <div class="text-3xl mb-3">💰</div>
+          <h3 class="font-semibold text-pink-400 mb-2">人力成本居高不下</h3>
+          <p class="text-sm text-gray-400">重复性工作占据大量人力，人效提升瓶颈明显，而专职数字化团队又负担不起。</p>
+        </div>
+        <div class="bg-gray-800/50 border border-blue-500/20 rounded-2xl p-6 card-hover">
+          <div class="text-3xl mb-3">🌫️</div>
+          <h3 class="font-semibold text-blue-400 mb-2">品牌形象模糊</h3>
+          <p class="text-sm text-gray-400">行业内做得不错，但对外没有清晰的品牌声音，在客户心智中缺乏辨识度和信任背书。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PRODUCT / CORE SERVICES ========== -->
+  <section id="product" class="bg-gray-950 py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <div class="inline-block tag-pill px-3 py-1 rounded-full text-xs mb-4">核心产品</div>
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">两大支柱 · 一体化交付</h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">以AI为引擎，以微信生态为载体，构建企业内部运营 + 对外品牌传播的完整闭环</p>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-8">
+        <!-- Product 1: AI Knowledge Base -->
+        <div class="bg-gradient-to-br from-blue-900/30 to-gray-800/50 border border-blue-500/20 rounded-3xl p-8 card-hover">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-14 h-14 rounded-2xl accent-gradient flex items-center justify-center">
+              <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold">AI本地知识库管理系统</h3>
+              <p class="text-blue-400 text-sm">企业大脑 · 随时可查</p>
+            </div>
+          </div>
+          <p class="text-gray-300 mb-6 leading-relaxed">将企业积累的文档、流程、案例、经验，全部结构化入库，由 AI 统一管理与检索。员工、老板、客户均可按权限快速获取所需信息。</p>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-3 text-sm text-gray-300">
+              <span class="text-blue-400 mt-0.5">✦</span>
+              <span>多格式文件导入（Word/PDF/图片/音视频），AI 自动提取结构化内容</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-gray-300">
+              <span class="text-blue-400 mt-0.5">✦</span>
+              <span>语义搜索 + 智能问答，告别"找文件"困境</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-gray-300">
+              <span class="text-blue-400 mt-0.5">✦</span>
+              <span>客户案例库自动分类归档，可一键生成传播素材</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-gray-300">
+              <span class="text-blue-400 mt-0.5">✦</span>
+              <span>本地化部署可选，数据安全完全掌控</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Product 2: Brand Digital Operations -->
+        <div class="bg-gradient-to-br from-emerald-900/30 to-gray-800/50 border border-emerald-500/20 rounded-3xl p-8 card-hover">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
+              <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold">品牌数字化运营系统</h3>
+              <p class="text-emerald-400 text-sm">微信生态 · 私域增长</p>
+            </div>
+          </div>
+          <p class="text-gray-300 mb-6 leading-relaxed">基于微信生态（公众号 / 小程序 / 企业微信）构建品牌数字化运营阵地，AI 辅助内容生产与客户触达，让每一个客户关系都产生持续价值。</p>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-3 text-sm text-gray-300">
+              <span class="text-emerald-400 mt-0.5">✦</span>
+              <span>SAAS小程序：客户案例展示 + 品牌故事 + 在线咨询一体化</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-gray-300">
+              <span class="text-emerald-400 mt-0.5">✦</span>
+              <span>AI内容工厂：自动生成品牌文章、朋友圈文案、短视频脚本</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-gray-300">
+              <span class="text-emerald-400 mt-0.5">✦</span>
+              <span>私域客户管理：打标签、分群推送、自动化跟进</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-gray-300">
+              <span class="text-emerald-400 mt-0.5">✦</span>
+              <span>数据看板：实时掌握传播效果与客户行为分析</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SOLUTION / FEATURES ========== -->
+  <section id="solution" class="bg-gray-900 py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <div class="inline-block tag-pill px-3 py-1 rounded-full text-xs mb-4">解决方案</div>
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">全链路数字化，让每个环节都提效</h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">从知识沉淀、内部运营到对外品牌传播，覆盖企业数字化增长的完整链路</p>
+      </div>
+
+      <!-- Tab switcher -->
+      <div class="flex flex-wrap justify-center gap-2 mb-12">
+        <template x-for="(tab, i) in ['内部运营提效', '知识资产沉淀', '品牌对外传播', '客户案例增值']" :key="i">
+          <button
+            @click="activeTab = i"
+            :class="activeTab === i ? 'accent-gradient text-white' : 'bg-gray-800 text-gray-400 hover:text-white'"
+            class="px-5 py-2 rounded-full text-sm font-medium transition-all"
+            x-text="tab"
+          ></button>
+        </template>
+      </div>
+
+      <!-- Tab content -->
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <!-- Tab 0: Internal Ops -->
+        <div x-show="activeTab === 0" x-transition class="space-y-5">
+          <h3 class="text-2xl font-bold">内部运营，效率倍增</h3>
+          <p class="text-gray-400 leading-relaxed">AI接管重复性工作，员工专注创造性价值。智能工作流让信息流转零摩擦，老板随时掌握经营全局。</p>
+          <div class="space-y-4">
+            <div class="flex items-start gap-4 bg-gray-800/50 rounded-xl p-4">
+              <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 text-sm flex-shrink-0">01</div>
+              <div><div class="font-medium mb-1">AI智能助手上岗</div><div class="text-sm text-gray-400">7×24小时解答员工常见问题，新员工培训周期缩短 60%</div></div>
+            </div>
+            <div class="flex items-start gap-4 bg-gray-800/50 rounded-xl p-4">
+              <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 text-sm flex-shrink-0">02</div>
+              <div><div class="font-medium mb-1">流程数字化管理</div><div class="text-sm text-gray-400">SOP电子化，执行留痕，问题追溯有据可查</div></div>
+            </div>
+            <div class="flex items-start gap-4 bg-gray-800/50 rounded-xl p-4">
+              <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 text-sm flex-shrink-0">03</div>
+              <div><div class="font-medium mb-1">老板实时决策看板</div><div class="text-sm text-gray-400">运营数据一屏呈现，随时随地掌握业务健康度</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 1: Knowledge Assets -->
+        <div x-show="activeTab === 1" x-transition class="space-y-5">
+          <h3 class="text-2xl font-bold">知识资产，持续增值</h3>
+          <p class="text-gray-400 leading-relaxed">企业最宝贵的资产是积累的经验与知识。我们帮你把它们从"人脑"转移到"系统"，永久保存、持续复用。</p>
+          <div class="space-y-4">
+            <div class="flex items-start gap-4 bg-gray-800/50 rounded-xl p-4">
+              <div class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-400 text-sm flex-shrink-0">📂</div>
+              <div><div class="font-medium mb-1">多源知识自动入库</div><div class="text-sm text-gray-400">文档、邮件、会议记录、历史案例，一键导入结构化存储</div></div>
+            </div>
+            <div class="flex items-start gap-4 bg-gray-800/50 rounded-xl p-4">
+              <div class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-400 text-sm flex-shrink-0">🔎</div>
+              <div><div class="font-medium mb-1">语义级智能检索</div><div class="text-sm text-gray-400">用自然语言提问，秒级定位所需知识，准确率 >92%</div></div>
+            </div>
+            <div class="flex items-start gap-4 bg-gray-800/50 rounded-xl p-4">
+              <div class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-400 text-sm flex-shrink-0">🔄</div>
+              <div><div class="font-medium mb-1">知识动态更新迭代</div><div class="text-sm text-gray-400">业务变化实时同步，知识库始终保持最新、最准</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Brand Comm -->
+        <div x-show="activeTab === 2" x-transition class="space-y-5">
+          <h3 class="text-2xl font-bold">品牌传播，微信生态全覆盖</h3>
+          <p class="text-gray-400 leading-relaxed">微信是中国最大的私域流量池。我们帮你在公众号、小程序、企业微信三端协同，打造立体品牌声量。</p>
+          <div class="space-y-4">
+            <div class="flex items-start gap-4 bg-gray-800/50 rounded-xl p-4">
+              <div class="w-8 h-8 rounded-lg wechat-bg flex items-center justify-center wechat-green text-sm flex-shrink-0">📱</div>
+              <div><div class="font-medium mb-1">SAAS小程序品牌阵地</div><div class="text-sm text-gray-400">开箱即用的品牌展示小程序，支持案例库、服务介绍、在线预约</div></div>
+            </div>
+            <div class="flex items-start gap-4 bg-gray-800/50 rounded-xl p-4">
+              <div class="w-8 h-8 rounded-lg wechat-bg flex items-center justify-center wechat-green text-sm flex-shrink-0">✍️</div>
+              <div><div class="font-medium mb-1">AI内容批量生产</div><div class="text-sm text-gray-400">一个案例自动生成推文、朋友圈文案、短视频脚本，内容效率提升 5×</div></div>
+            </div>
+            <div class="flex items-start gap-4 bg-gray-800/50 rounded-xl p-4">
+              <div class="w-8 h-8 rounded-lg wechat-bg flex items-center justify-center wechat-green text-sm flex-shrink-0">📡</div>
+              <div><div class="font-medium mb-1">精准私域触达</div><div class="text-sm text-gray-400">基于客户标签智能推送，打开率提升 3× ，转化成本降低 40%</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Case Value -->
+        <div x-show="activeTab === 3" x-transition class="space-y-5">
+          <h3 class="text-2xl font-bold">客户案例，变成最强销售工具</h3>
+          <p class="text-gray-400 leading-relaxed">每完成一个客户项目，都应该产生持续的品牌价值。我们让案例库成为会自动"工作"的销售资产。</p>
+          <div class="space-y-4">
+            <div class="flex items-start gap-4 bg-gray-800/50 rounded-xl p-4">
+              <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400 text-sm flex-shrink-0">🏆</div>
+              <div><div class="font-medium mb-1">结构化案例沉淀</div><div class="text-sm text-gray-400">按行业、规模、解决方案分类，形成有序的案例资产库</div></div>
+            </div>
+            <div class="flex items-start gap-4 bg-gray-800/50 rounded-xl p-4">
+              <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400 text-sm flex-shrink-0">🎨</div>
+              <div><div class="font-medium mb-1">一键生成传播素材</div><div class="text-sm text-gray-400">AI自动生成图文、视频脚本、PPT提案，销售提案效率翻倍</div></div>
+            </div>
+            <div class="flex items-start gap-4 bg-gray-800/50 rounded-xl p-4">
+              <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400 text-sm flex-shrink-0">📈</div>
+              <div><div class="font-medium mb-1">案例驱动新客转化</div><div class="text-sm text-gray-400">潜在客户通过小程序浏览相似案例，信任度自然建立，成交周期缩短</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right visual (same for all tabs) -->
+        <div class="relative bg-gray-800/40 border border-white/10 rounded-2xl p-6 h-80 flex items-center justify-center overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-cyan-500/5"></div>
+          <div class="relative grid grid-cols-2 gap-4 w-full">
+            <div class="bg-gray-700/60 rounded-xl p-4 text-center">
+              <div class="text-3xl mb-2">🤖</div>
+              <div class="text-xs text-gray-300">AI引擎</div>
+            </div>
+            <div class="bg-gray-700/60 rounded-xl p-4 text-center">
+              <div class="text-3xl mb-2">📚</div>
+              <div class="text-xs text-gray-300">知识库</div>
+            </div>
+            <div class="bg-gray-700/60 rounded-xl p-4 text-center">
+              <div class="wechat-green text-3xl mb-2">💬</div>
+              <div class="text-xs text-gray-300">微信生态</div>
+            </div>
+            <div class="bg-gray-700/60 rounded-xl p-4 text-center">
+              <div class="text-3xl mb-2">📊</div>
+              <div class="text-xs text-gray-300">数据洞察</div>
+            </div>
+          </div>
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div class="w-16 h-16 rounded-full accent-gradient opacity-20 animate-ping"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== HOW IT WORKS ========== -->
+  <section id="how" class="bg-gray-950 py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <div class="inline-block tag-pill px-3 py-1 rounded-full text-xs mb-4">快速落地</div>
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">最快 2 周，完成数字化升级</h2>
+        <p class="text-gray-400 max-w-xl mx-auto">无需技术团队，我们提供从部署到运营的全程陪跑服务</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="relative text-center step-line">
+          <div class="w-14 h-14 rounded-2xl accent-gradient mx-auto mb-4 flex items-center justify-center text-xl font-bold relative z-10">1</div>
+          <h4 class="font-semibold mb-2">需求诊断</h4>
+          <p class="text-sm text-gray-400">深度了解企业现状、业务痛点与目标，制定专属数字化方案</p>
+          <div class="text-xs text-blue-400 mt-3">1-3天</div>
+        </div>
+        <div class="relative text-center step-line">
+          <div class="w-14 h-14 rounded-2xl accent-gradient mx-auto mb-4 flex items-center justify-center text-xl font-bold relative z-10">2</div>
+          <h4 class="font-semibold mb-2">系统配置</h4>
+          <p class="text-sm text-gray-400">知识库搭建、小程序品牌定制、微信生态打通，一次配置到位</p>
+          <div class="text-xs text-blue-400 mt-3">3-7天</div>
+        </div>
+        <div class="relative text-center step-line">
+          <div class="w-14 h-14 rounded-2xl accent-gradient mx-auto mb-4 flex items-center justify-center text-xl font-bold relative z-10">3</div>
+          <h4 class="font-semibold mb-2">数据迁移</h4>
+          <p class="text-sm text-gray-400">历史文档、案例、客户数据批量导入，AI自动分类整理</p>
+          <div class="text-xs text-blue-400 mt-3">3-5天</div>
+        </div>
+        <div class="relative text-center">
+          <div class="w-14 h-14 rounded-2xl accent-gradient mx-auto mb-4 flex items-center justify-center text-xl font-bold">4</div>
+          <h4 class="font-semibold mb-2">上线运营</h4>
+          <p class="text-sm text-gray-400">培训团队，持续优化，专属客户成功经理全程陪跑</p>
+          <div class="text-xs text-blue-400 mt-3">持续服务</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CASE STUDIES ========== -->
+  <section id="cases" class="bg-gray-900 py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <div class="inline-block tag-pill px-3 py-1 rounded-full text-xs mb-4">客户案例</div>
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">他们已经先一步数字化了</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Case 1 -->
+        <div class="bg-gray-800/50 border border-white/10 rounded-2xl p-6 card-hover">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center text-xl">🏗️</div>
+            <div>
+              <div class="font-semibold">某建筑装饰公司</div>
+              <div class="text-xs text-gray-400">50人团队 · 年营收5000万</div>
+            </div>
+          </div>
+          <p class="text-sm text-gray-300 mb-4">通过AI知识库沉淀了200+工程案例，用小程序向客户展示，获客转化率提升明显。</p>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-blue-500/10 rounded-xl p-3 text-center">
+              <div class="text-xl font-bold text-blue-400">↑65%</div>
+              <div class="text-xs text-gray-400">方案提案效率</div>
+            </div>
+            <div class="bg-blue-500/10 rounded-xl p-3 text-center">
+              <div class="text-xl font-bold text-blue-400">3.2×</div>
+              <div class="text-xs text-gray-400">案例复用率</div>
+            </div>
+          </div>
+        </div>
+        <!-- Case 2 -->
+        <div class="bg-gray-800/50 border border-white/10 rounded-2xl p-6 card-hover">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-xl">🍃</div>
+            <div>
+              <div class="font-semibold">某连锁健康品牌</div>
+              <div class="text-xs text-gray-400">30+门店 · 私域3万用户</div>
+            </div>
+          </div>
+          <p class="text-sm text-gray-300 mb-4">搭建微信私域运营体系，AI自动生产内容，客户复购率大幅提升，门店人效翻倍。</p>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-emerald-500/10 rounded-xl p-3 text-center">
+              <div class="text-xl font-bold text-emerald-400">↑89%</div>
+              <div class="text-xs text-gray-400">私域复购率</div>
+            </div>
+            <div class="bg-emerald-500/10 rounded-xl p-3 text-center">
+              <div class="text-xl font-bold text-emerald-400">2×</div>
+              <div class="text-xs text-gray-400">内容生产效率</div>
+            </div>
+          </div>
+        </div>
+        <!-- Case 3 -->
+        <div class="bg-gray-800/50 border border-white/10 rounded-2xl p-6 card-hover">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center text-xl">⚙️</div>
+            <div>
+              <div class="font-semibold">某精密制造企业</div>
+              <div class="text-xs text-gray-400">80人团队 · B端客户为主</div>
+            </div>
+          </div>
+          <p class="text-sm text-gray-300 mb-4">通过内部AI知识库统一了技术文档管理，新员工上手速度显著提升，研发效率大幅提升。</p>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-amber-500/10 rounded-xl p-3 text-center">
+              <div class="text-xl font-bold text-amber-400">↓60%</div>
+              <div class="text-xs text-gray-400">新员工培训周期</div>
+            </div>
+            <div class="bg-amber-500/10 rounded-xl p-3 text-center">
+              <div class="text-xl font-bold text-amber-400">↑40%</div>
+              <div class="text-xs text-gray-400">研发文档效率</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PRICING ========== -->
+  <section class="bg-gray-950 py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <div class="inline-block tag-pill px-3 py-1 rounded-full text-xs mb-4">服务套餐</div>
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">透明定价，按需选择</h2>
+        <p class="text-gray-400">无隐藏费用，支持按年付费享折扣</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <!-- Starter -->
+        <div class="bg-gray-800/50 border border-white/10 rounded-2xl p-7 card-hover">
+          <div class="text-sm text-gray-400 mb-1">入门版</div>
+          <div class="text-3xl font-bold mb-1">¥ 2,999<span class="text-base font-normal text-gray-400">/年</span></div>
+          <p class="text-sm text-gray-400 mb-6">适合10人以内初创团队</p>
+          <ul class="space-y-3 text-sm text-gray-300 mb-8">
+            <li class="flex items-center gap-2"><span class="text-blue-400">✓</span> AI知识库（5GB存储）</li>
+            <li class="flex items-center gap-2"><span class="text-blue-400">✓</span> 标准小程序模板</li>
+            <li class="flex items-center gap-2"><span class="text-blue-400">✓</span> 微信公众号对接</li>
+            <li class="flex items-center gap-2"><span class="text-blue-400">✓</span> 基础数据看板</li>
+            <li class="flex items-center gap-2 text-gray-500"><span>✗</span> 私域运营自动化</li>
+          </ul>
+          <a href="#contact" class="block text-center py-2.5 rounded-xl border border-white/20 text-white hover:bg-white/10 transition-colors text-sm font-medium">立即咨询</a>
+        </div>
+        <!-- Pro (highlight) -->
+        <div class="bg-gradient-to-b from-blue-900/60 to-gray-800/80 border border-blue-500/40 rounded-2xl p-7 card-hover relative">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 accent-gradient rounded-full text-xs font-semibold">最受欢迎</div>
+          <div class="text-sm text-blue-400 mb-1">标准版</div>
+          <div class="text-3xl font-bold mb-1">¥ 6,999<span class="text-base font-normal text-gray-400">/年</span></div>
+          <p class="text-sm text-gray-400 mb-6">适合20-80人成长型企业</p>
+          <ul class="space-y-3 text-sm text-gray-300 mb-8">
+            <li class="flex items-center gap-2"><span class="text-blue-400">✓</span> AI知识库（50GB存储）</li>
+            <li class="flex items-center gap-2"><span class="text-blue-400">✓</span> 品牌定制化小程序</li>
+            <li class="flex items-center gap-2"><span class="text-blue-400">✓</span> 微信生态全打通</li>
+            <li class="flex items-center gap-2"><span class="text-blue-400">✓</span> AI内容自动生成</li>
+            <li class="flex items-center gap-2"><span class="text-blue-400">✓</span> 私域运营自动化</li>
+          </ul>
+          <a href="#contact" class="block text-center py-2.5 rounded-xl accent-gradient text-white font-semibold text-sm hover:opacity-90 transition-opacity">免费试用14天</a>
+        </div>
+        <!-- Enterprise -->
+        <div class="bg-gray-800/50 border border-white/10 rounded-2xl p-7 card-hover">
+          <div class="text-sm text-gray-400 mb-1">旗舰版</div>
+          <div class="text-3xl font-bold mb-1">定制<span class="text-base font-normal text-gray-400">/年</span></div>
+          <p class="text-sm text-gray-400 mb-6">适合100人以上企业</p>
+          <ul class="space-y-3 text-sm text-gray-300 mb-8">
+            <li class="flex items-center gap-2"><span class="text-blue-400">✓</span> 无限存储 + 本地部署</li>
+            <li class="flex items-center gap-2"><span class="text-blue-400">✓</span> 全功能定制开发</li>
+            <li class="flex items-center gap-2"><span class="text-blue-400">✓</span> 专属客户成功团队</li>
+            <li class="flex items-center gap-2"><span class="text-blue-400">✓</span> API开放集成</li>
+            <li class="flex items-center gap-2"><span class="text-blue-400">✓</span> SLA保障 + 安全审计</li>
+          </ul>
+          <a href="#contact" class="block text-center py-2.5 rounded-xl border border-white/20 text-white hover:bg-white/10 transition-colors text-sm font-medium">联系我们</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CTA / CONTACT ========== -->
+  <section id="contact" class="py-24 relative overflow-hidden">
+    <div class="absolute inset-0 hero-gradient"></div>
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-blue-500/10 rounded-full blur-3xl"></div>
+    </div>
+    <div class="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl sm:text-4xl font-extrabold mb-4">
+        现在开始，让AI为你的企业<span class="text-gradient">持续创造价值</span>
+      </h2>
+      <p class="text-gray-300 mb-10 text-lg">免费体验14天，专属顾问1对1需求诊断，量身定制数字化方案</p>
+      <div class="bg-gray-900/70 border border-white/10 backdrop-blur-sm rounded-2xl p-8 max-w-lg mx-auto" x-data="{ submitted: false, name:'', phone:'', company:'' }">
+        <template x-if="!submitted">
+          <div class="space-y-4">
+            <input x-model="name" type="text" placeholder="您的姓名" class="w-full bg-gray-800/80 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 text-sm transition-colors" />
+            <input x-model="phone" type="tel" placeholder="手机号码" class="w-full bg-gray-800/80 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 text-sm transition-colors" />
+            <input x-model="company" type="text" placeholder="企业名称" class="w-full bg-gray-800/80 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 text-sm transition-colors" />
+            <button @click="if(name && phone) { submitted = true }" class="w-full py-3 rounded-xl accent-gradient text-white font-semibold hover:opacity-90 transition-opacity">
+              免费预约顾问 →
+            </button>
+            <p class="text-xs text-gray-500">提交即代表您同意我们的隐私政策，我们承诺保护您的数据安全</p>
+          </div>
+        </template>
+        <template x-if="submitted">
+          <div class="py-6 text-center">
+            <div class="text-5xl mb-4">🎉</div>
+            <div class="text-xl font-bold mb-2">预约成功！</div>
+            <p class="text-gray-400 text-sm">我们的专属顾问将在 <span class="text-blue-400 font-medium">24小时内</span> 与您联系，请保持手机畅通。</p>
+          </div>
+        </template>
+      </div>
+      <!-- Contact info -->
+      <div class="mt-10 flex flex-wrap justify-center gap-8 text-sm text-gray-400">
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          contact@company.com
+        </div>
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.948V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          400-000-0000
+        </div>
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 wechat-green" fill="currentColor" viewBox="0 0 24 24"><path d="M8.5 3C4.36 3 1 6.36 1 10.5c0 2.26 1.01 4.28 2.6 5.65L3 19l3.17-1.58A7.5 7.5 0 008.5 18c.37 0 .73-.02 1.08-.07A6.5 6.5 0 0015 21a6.5 6.5 0 002-.31L19 21.5l-.46-2.6A6.48 6.48 0 0021 14.5a6.5 6.5 0 00-6.5-6.5c-.23 0-.46.01-.68.04A7.5 7.5 0 008.5 3z"/></svg>
+          微信扫码添加客服
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="bg-gray-950 border-t border-white/5 py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-lg accent-gradient flex items-center justify-center text-white font-bold text-xs">业</div>
+          <span class="font-bold text-sm">业美美</span>
+          <span class="text-gray-600 text-sm">· AI赋能中小企业数字化运营</span>
+        </div>
+        <div class="flex gap-6 text-sm text-gray-500">
+          <a href="#product" class="hover:text-gray-300 transition-colors">产品服务</a>
+          <a href="#solution" class="hover:text-gray-300 transition-colors">解决方案</a>
+          <a href="#cases" class="hover:text-gray-300 transition-colors">客户案例</a>
+          <a href="#contact" class="hover:text-gray-300 transition-colors">联系我们</a>
+        </div>
+        <div class="text-xs text-gray-600">© 2025 业美美 · 保留所有权利</div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
