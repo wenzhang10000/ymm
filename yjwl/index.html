@@ -333,8 +333,8 @@ body::after {
   margin: 0 auto 22px;
 }
 
-/* ========== 第5页：反馈图片区 ========== */
-.feedback-imgs {
+/* ========== 第5页：文字反馈区 ========== */
+.feedback-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 16px;
@@ -342,33 +342,33 @@ body::after {
   width: 100%;
   max-width: 820px;
 }
-.feedback-img-wrap {
-  position: relative;
+.feedback-item {
+  background: rgba(255,255,255,0.92);
   border-radius: var(--radius-sm);
-  overflow: hidden;
+  padding: 20px 22px;
   box-shadow: var(--shadow-soft);
-  background: rgba(255,255,255,0.9);
-  border: 2px solid var(--color-border);
-  aspect-ratio: 4/3;
+  border-top: 3px solid var(--color-primary);
+  text-align: left;
+  transition: transform 0.2s;
 }
-.feedback-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  border-radius: var(--radius-sm);
+.feedback-item:hover {
+  transform: translateY(-3px);
 }
-.img-caption {
-  position: absolute;
-  bottom: 0;
-  left: 0; right: 0;
-  background: linear-gradient(transparent, rgba(0,0,0,0.65));
-  color: #fff;
-  font-size: 12.5px;
-  font-weight: 600;
-  padding: 24px 12px 10px;
-  text-align: center;
-  pointer-events: none;
+.feedback-item:nth-child(2) { border-top-color: var(--color-cool); }
+.feedback-item:nth-child(3) { border-top-color: var(--color-accent); }
+.fi-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 8px;
+}
+.feedback-item:nth-child(2) .fi-name { color: var(--color-cool); }
+.feedback-item:nth-child(3) .fi-name { color: var(--color-accent); }
+.fi-text {
+  font-size: 13px;
+  color: var(--color-text);
+  line-height: 1.75;
+  font-style: italic;
 }
 
 .info-row {
@@ -429,7 +429,7 @@ body::after {
   <section class="slide is-active" id="slide-1">
     <div class="slide1-box">
       <div class="fade-up">
-        <div class="tag">🎓 小升初 · 衔接教育</div>
+        <div class="tag">:: 小升初 · 衔接教育</div>
       </div>
       <div class="slide1-title fade-up fade-up-d1">致 2026 届小学毕业生家长的一封信</div>
       <div class="slide1-subtitle fade-up fade-up-d2">亲爱的家长朋友，您好！</div>
@@ -443,14 +443,14 @@ body::after {
         <p>这些困惑与焦虑，我们都深深理解。</p>
       </div>
       <div class="slide1-cta fade-up fade-up-d4">
-        <div class="cta-btn">📅 2026年7月第一周 · 正式开课</div>
+        <div class="cta-btn">:: 2026年7月第一周 · 正式开课</div>
       </div>
     </div>
   </section>
 
   <!-- 第2页：语文 -->
   <section class="slide" id="slide-2">
-    <div class="tag" style="margin-bottom:18px">📖 语文衔接课</div>
+    <div class="tag" style="margin-bottom:18px">:: 语文衔接课</div>
     <div class="teacher-card fade-up">
       <div class="teacher-info">
         <div class="teacher-name">李老师 · 语文</div>
@@ -461,19 +461,19 @@ body::after {
         </div>
         <div class="course-grid">
           <div class="course-item">
-            <div class="ci-title">📜 古诗文启蒙</div>
+            <div class="ci-title">:: 古诗文启蒙</div>
             <div class="ci-desc">精读《世说新语》等短篇经典，轻松接轨初中文言文</div>
           </div>
           <div class="course-item">
-            <div class="ci-title">📖 现代文阅读</div>
+            <div class="ci-title">:: 现代文阅读</div>
             <div class="ci-desc">分析名家作品，揭秘初中阅读题型与答题思路</div>
           </div>
           <div class="course-item">
-            <div class="ci-title">✍️ 写作专项突破</div>
+            <div class="ci-title">:: 写作专项突破</div>
             <div class="ci-desc">告别"流水账"，系统训练考场作文的选材与结构</div>
           </div>
           <div class="course-item">
-            <div class="ci-title">📝 基础巩固</div>
+            <div class="ci-title">:: 基础巩固</div>
             <div class="ci-desc">标点、病句、修辞手法，为开学摸底考扎实储备</div>
           </div>
         </div>
@@ -488,7 +488,7 @@ body::after {
 
   <!-- 第3页：数学 -->
   <section class="slide" id="slide-3">
-    <div class="tag" style="margin-bottom:18px">🔢 数学衔接课</div>
+    <div class="tag" style="margin-bottom:18px">:: 数学衔接课</div>
     <div class="teacher-card fade-up">
       <div class="teacher-info">
         <div class="teacher-name">吴老师 · 数学</div>
@@ -499,19 +499,19 @@ body::after {
         </div>
         <div class="course-grid">
           <div class="course-item">
-            <div class="ci-title">🔢 有理数运算</div>
+            <div class="ci-title">:: 有理数运算</div>
             <div class="ci-desc">正负数、数轴、绝对值、四则混合运算，练就扎实计算功底</div>
           </div>
           <div class="course-item">
-            <div class="ci-title">📐 代数思维转型</div>
+            <div class="ci-title">:: 代数思维转型</div>
             <div class="ci-desc">整式加减、一元一次方程，从"算术"平稳过渡到"代数"</div>
           </div>
           <div class="course-item">
-            <div class="ci-title">📏 几何基础入门</div>
+            <div class="ci-title">:: 几何基础入门</div>
             <div class="ci-desc">线段与角的度量与计算，初步建立几何直观</div>
           </div>
           <div class="course-item">
-            <div class="ci-title">💡 数学思想渗透</div>
+            <div class="ci-title">:: 数学思想渗透</div>
             <div class="ci-desc">分类讨论、数形结合、整体思想，提前具备高效应试思维</div>
           </div>
         </div>
@@ -526,7 +526,7 @@ body::after {
 
   <!-- 第4页：英语 -->
   <section class="slide" id="slide-4">
-    <div class="tag" style="margin-bottom:18px">🔤 英语衔接课</div>
+    <div class="tag" style="margin-bottom:18px">:: 英语衔接课</div>
     <div class="teacher-card fade-up">
       <div class="teacher-info">
         <div class="teacher-name">刘老师 · 英语</div>
@@ -537,19 +537,19 @@ body::after {
         </div>
         <div class="course-grid">
           <div class="course-item">
-            <div class="ci-title">🔊 音标与拼读突破</div>
+            <div class="ci-title">:: 音标与拼读突破</div>
             <div class="ci-desc">国际音标系统学习 + 自然拼读强化，见词能读、听音能写</div>
           </div>
           <div class="course-item">
-            <div class="ci-title">📚 词汇记忆法</div>
+            <div class="ci-title">:: 词汇记忆法</div>
             <div class="ci-desc">告别死记硬背，掌握词根、语境、联想记忆等科学方法</div>
           </div>
           <div class="course-item">
-            <div class="ci-title">✏️ 语法框架搭建</div>
+            <div class="ci-title">:: 语法框架搭建</div>
             <div class="ci-desc">一般/现在进行时、there be 句型等核心语法清晰讲透</div>
           </div>
           <div class="course-item">
-            <div class="ci-title">🎤 听说训练</div>
+            <div class="ci-title">:: 听说训练</div>
             <div class="ci-desc">角色扮演、情景对话、听力技巧专项，让孩子敢开口、能听懂</div>
           </div>
         </div>
@@ -571,26 +571,27 @@ body::after {
         "育见未来"专注小学至初中全科衔接教育，秉持<strong>"育见未来、陪伴成长"</strong>的初心，
         汇聚一批教学一线深耕10年以上的优秀教师。我们不止教授知识，更愿做孩子初中第一步的陪伴者与引路人。
       </div>
-      <div class="feedback-imgs fade-up fade-up-d3">
-        <div class="feedback-img-wrap">
-          <img class="feedback-img" src="家长好评001.jpg" alt="家长好评001">
+      <div class="feedback-grid fade-up fade-up-d3">
+        <div class="feedback-item">
+          <div class="fi-name">:: 家长反馈 · 数学</div>
+          <div class="fi-text">"暑假班打下扎实底子，开学后孩子数学第一次测验就拿了班级前三，自信心整个上来了！"</div>
         </div>
-        <div class="feedback-img-wrap">
-          <img class="feedback-img" src="家长好评002.jpg" alt="家长好评002">
+        <div class="feedback-item">
+          <div class="fi-name">:: 家长反馈 · 英语</div>
+          <div class="fi-text">"音标学完背单词轻松太多了，孩子现在主动预习英语，真的变了一个人！"</div>
         </div>
-        <div class="feedback-img-wrap">
-          <img class="feedback-img" src="家长好评004.jpg" alt="家长好评004">
-          <div class="img-caption"></div>
-<!--  感谢老师如此有温度的教育，遇见你是孩子们的幸运。-->
+        <div class="feedback-item">
+          <div class="fi-name">:: 家长反馈 · 综合</div>
+          <div class="fi-text">"班主任真的超细心，孩子第一次住宿，老师们连生活适应都帮着引导，真心感动。"</div>
         </div>
       </div>
       <div class="info-row fade-up fade-up-d4">
-        <div class="info-item"><span class="icon">📅</span> 2026年7月第一周开课</div>
-        <div class="info-item"><span class="icon">📚</span> 共 15 次课</div>
-        <div class="info-item"><span class="icon">📝</span> 语文 · 数学 · 英语</div>
+        <div class="info-item"><span class="icon">::</span> 2026年7月第一周开课</div>
+        <div class="info-item"><span class="icon">::</span> 共 15 次课</div>
+        <div class="info-item"><span class="icon">::</span> 语文 · 数学 · 英语</div>
       </div>
       <div class="fade-up fade-up-d4">
-        <a class="brand-cta" href="#">📞 名额有限，即刻预约咨询</a>
+        <a class="brand-cta" href="#">:: 名额有限，即刻预约咨询</a>
       </div>
     </div>
   </section>
@@ -626,10 +627,8 @@ document.addEventListener('keydown', e => {
   if (e.key === 'End') goTo(total - 1);
 });
 
-// 初始化进度条
 document.getElementById('progressBar').style.width = (1 / total * 100) + '%';
 
-// 触摸滑动支持
 let touchStartX = 0;
 document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
 document.addEventListener('touchend', e => {
