@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>育见未来 · 小升初衔接课</title>
+<style>
+:root {
+  --bg-primary: #fef9f5;
+  --bg-secondary: #fff5f0;
+  --bg-card: rgba(255,255,255,0.88);
+  --color-primary: #e8a87c;
+  --color-secondary: #d4a5a5;
+  --color-accent: #9b72aa;
+  --color-cool: #7ec8e3;
+  --color-warm: #f4c2a1;
+  --color-text: #4a4a4a;
+  --color-text-light: #777;
+  --color-border: rgba(232,168,124,0.25);
+  --shadow-card: 0 4px 20px rgba(232,168,124,0.12);
+  --shadow-soft: 0 2px 12px rgba(0,0,0,0.06);
+  --radius: 18px;
+  --radius-sm: 12px;
+  --font-main: "PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg-primary);
+  color: var(--color-text);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: -120px; right: -120px;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,168,124,0.13), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -80px; left: -80px;
+  width: 350px; height: 350px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(155,114,170,0.10), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.slide-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+}
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 60px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  z-index: 0;
+  overflow-y: auto;
+}
+.slide.is-active {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 10;
+}
+
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  padding: 36px 44px;
+  border: 1px solid var(--color-border);
+  backdrop-filter: blur(6px);
+}
+
+.tag {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 16px;
+  border-radius: 20px;
+  letter-spacing: 1px;
+}
+
+.progress-bar {
+  position: fixed;
+  bottom: 0; left: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent), var(--color-cool));
+  transition: width 0.4s ease;
+  z-index: 100;
+}
+.slide-counter {
+  position: fixed;
+  bottom: 14px;
+  right: 28px;
+  font-size: 14px;
+  color: var(--color-text-light);
+  z-index: 101;
+  font-weight: 500;
+}
+
+.top-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 20px;
+  background: rgba(254,249,245,0.85);
+  backdrop-filter: blur(8px);
+  z-index: 99;
+  border-bottom: 1px solid var(--color-border);
+}
+.nav-dot {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--color-primary);
+  background: transparent;
+  color: var(--color-primary);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nav-dot.active {
+  background: var(--color-primary);
+  color: #fff;
+  transform: scale(1.15);
+}
+
+.fade-up { animation: fadeUp 0.6s ease both; }
+.fade-up-d1 { animation-delay: 0.1s; }
+.fade-up-d2 { animation-delay: 0.2s; }
+.fade-up-d3 { animation-delay: 0.35s; }
+.fade-up-d4 { animation-delay: 0.5s; }
+@keyframes fadeUp {
+  from { opacity:0; transform: translateY(24px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+/* ========== 第1页：封面信 ========== */
+#slide-1 {
+  background: linear-gradient(160deg, #fef9f5 0%, #fff0e8 50%, #f5e6f5 100%);
+}
+.slide1-box {
+  max-width: 780px;
+  width: 100%;
+}
+.slide1-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+.slide1-subtitle {
+  font-size: 15px;
+  color: var(--color-text-light);
+  margin-bottom: 22px;
+  line-height: 1.7;
+}
+.slide1-card {
+  background: rgba(255,255,255,0.92);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  box-shadow: var(--shadow-card);
+  border-left: 5px solid var(--color-primary);
+  margin-bottom: 18px;
+}
+.slide1-card p {
+  font-size: 14.5px;
+  line-height: 1.9;
+  color: var(--color-text);
+  margin-bottom: 8px;
+}
+.slide1-card .highlight {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+.slide1-cta {
+  text-align: center;
+  margin-top: 18px;
+}
+.slide1-cta .cta-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 12px 40px;
+  border-radius: 30px;
+  text-decoration: none;
+  box-shadow: 0 4px 18px rgba(232,168,124,0.35);
+  transition: transform 0.2s;
+}
+.slide1-cta .cta-btn:hover { transform: translateY(-2px); }
+
+/* ========== 第2/3/4页：课程页通用 ========== */
+.teacher-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 820px;
+  width: 100%;
+}
+.teacher-info { width:100%; }
+.teacher-name {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-accent);
+  margin-bottom: 6px;
+  text-align: center;
+}
+.teacher-bio {
+  font-size: 13.5px;
+  color: var(--color-text-light);
+  line-height: 1.7;
+  margin-bottom: 14px;
+  text-align: center;
+}
+.course-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+.course-item {
+  background: rgba(255,255,255,0.9);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  border-left: 4px solid var(--color-cool);
+  box-shadow: var(--shadow-soft);
+}
+.course-item .ci-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-cool);
+  margin-bottom: 4px;
+}
+.course-item .ci-desc {
+  font-size: 12.5px;
+  color: var(--color-text-light);
+  line-height: 1.6;
+}
+.benefit-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+  justify-content: center;
+}
+.benefit-tag {
+  background: linear-gradient(135deg, var(--color-cool), #b8e6f0);
+  color: #2a6b7e;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 16px;
+}
+
+/* ========== 各页背景和特色色 ========== */
+#slide-2 { background: linear-gradient(160deg, #fef9f5, #f5f0ff); }
+#slide-3 { background: linear-gradient(160deg, #fef9f5, #f0f5f0); }
+#slide-3 .course-item { border-left-color: var(--color-primary); }
+#slide-3 .benefit-tag {
+  background: linear-gradient(135deg, var(--color-primary), #f0c070);
+  color: #5a3a0a;
+}
+#slide-4 { background: linear-gradient(160deg, #fef9f5, #fef5f0); }
+#slide-4 .teacher-name { color: var(--color-accent); }
+#slide-4 .course-item { border-left-color: var(--color-accent); }
+#slide-4 .benefit-tag {
+  background: linear-gradient(135deg, var(--color-accent), #d4a5d0);
+  color: #3a1a4a;
+}
+
+/* ========== 第5页：品牌页 ========== */
+#slide-5 {
+  background: linear-gradient(160deg, #fef9f5 0%, #f5e6f5 40%, #e6f5f5 100%);
+}
+.brand-box {
+  max-width: 860px;
+  width: 100%;
+  text-align: center;
+}
+.brand-logo {
+  font-size: 48px;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent), var(--color-cool));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 6px;
+}
+.brand-slogan {
+  font-size: 18px;
+  color: var(--color-accent);
+  font-weight: 700;
+  margin-bottom: 24px;
+  letter-spacing: 3px;
+}
+.brand-intro {
+  font-size: 14px;
+  color: var(--color-text-light);
+  line-height: 1.9;
+  max-width: 640px;
+  margin: 0 auto 22px;
+}
+
+/* ========== 第5页：反馈图片区 ========== */
+.feedback-imgs {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 22px;
+  width: 100%;
+  max-width: 820px;
+}
+.feedback-img-wrap {
+  position: relative;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  background: rgba(255,255,255,0.9);
+  border: 2px solid var(--color-border);
+  aspect-ratio: 4/3;
+}
+.feedback-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--radius-sm);
+}
+.img-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.65));
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 24px 12px 10px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.info-row {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14.5px;
+  color: var(--color-text);
+  font-weight: 600;
+}
+.info-item .icon { font-size: 20px; }
+.brand-cta {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 12px 44px;
+  border-radius: 30px;
+  text-decoration: none;
+  box-shadow: 0 4px 18px rgba(232,168,124,0.35);
+}
+
+.hint {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: var(--color-text-light);
+  opacity: 0.6;
+  z-index: 101;
+}
+</style>
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<div class="top-nav">
+  <button class="nav-dot active" onclick="goTo(0)">1</button>
+  <button class="nav-dot" onclick="goTo(1)">2</button>
+  <button class="nav-dot" onclick="goTo(2)">3</button>
+  <button class="nav-dot" onclick="goTo(3)">4</button>
+  <button class="nav-dot" onclick="goTo(4)">5</button>
+</div>
+
+<!-- 幻灯片 -->
+<div class="slide-container">
+
+  <!-- 第1页：致家长的一封信 -->
+  <section class="slide is-active" id="slide-1">
+    <div class="slide1-box">
+      <div class="fade-up">
+        <div class="tag">🎓 小升初 · 衔接教育</div>
+      </div>
+      <div class="slide1-title fade-up fade-up-d1">致 2026 届小学毕业生家长的一封信</div>
+      <div class="slide1-subtitle fade-up fade-up-d2">亲爱的家长朋友，您好！</div>
+      <div class="slide1-card fade-up fade-up-d3">
+        <p>首先，<span class="highlight">祝贺您的孩子</span>即将圆满完成小学学业，跨入初中的大门！这既是孩子成长的重要里程碑，也是家庭教育的新起点。</p>
+        <p>作为父母，您在欣慰之余，是否也隐隐有些担忧？</p>
+        <p>▸ 换了新学校、新老师、新同学，孩子能快速适应初中新环境吗？<br>
+           ▸ 课程从"语数英"一下变成"多科目齐头并进"，孩子跟不上学习节奏怎么办？<br>
+           ▸ 长达两个月的暑假，既怕荒废又怕硬灌，到底该怎么帮孩子做好衔接规划？<br>
+           ▸ 青春期遇上新阶段，孩子心里话变少了，怎么才能在放手的同时给到支撑？</p>
+        <p>这些困惑与焦虑，我们都深深理解。</p>
+      </div>
+      <div class="slide1-cta fade-up fade-up-d4">
+        <div class="cta-btn">📅 2026年7月第一周 · 正式开课</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第2页：语文 -->
+  <section class="slide" id="slide-2">
+    <div class="tag" style="margin-bottom:18px">📖 语文衔接课</div>
+    <div class="teacher-card fade-up">
+      <div class="teacher-info">
+        <div class="teacher-name">李老师 · 语文</div>
+        <div class="teacher-bio">
+          一线初中语文教学 <strong>12年</strong>，校优秀班主任<br>
+          "李老师的课像讲故事，笑着笑着就学会了。"—— 学生说<br>
+          "特别懂孩子，既是严师又是孩子们倾诉心事的大家长。"—— 家长夸赞
+        </div>
+        <div class="course-grid">
+          <div class="course-item">
+            <div class="ci-title">📜 古诗文启蒙</div>
+            <div class="ci-desc">精读《世说新语》等短篇经典，轻松接轨初中文言文</div>
+          </div>
+          <div class="course-item">
+            <div class="ci-title">📖 现代文阅读</div>
+            <div class="ci-desc">分析名家作品，揭秘初中阅读题型与答题思路</div>
+          </div>
+          <div class="course-item">
+            <div class="ci-title">✍️ 写作专项突破</div>
+            <div class="ci-desc">告别"流水账"，系统训练考场作文的选材与结构</div>
+          </div>
+          <div class="course-item">
+            <div class="ci-title">📝 基础巩固</div>
+            <div class="ci-desc">标点、病句、修辞手法，为开学摸底考扎实储备</div>
+          </div>
+        </div>
+        <div class="benefit-tags">
+          <span class="benefit-tag">► 消除文言文畏难情绪</span>
+          <span class="benefit-tag">► 阅读速度与准确率提升</span>
+          <span class="benefit-tag">► 写作从怕动笔到爱表达</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第3页：数学 -->
+  <section class="slide" id="slide-3">
+    <div class="tag" style="margin-bottom:18px">🔢 数学衔接课</div>
+    <div class="teacher-card fade-up">
+      <div class="teacher-info">
+        <div class="teacher-name">吴老师 · 数学</div>
+        <div class="teacher-bio">
+          初中数学一线骨干 <strong>10年</strong>，连续6年获评校优秀班主任<br>
+          "上吴老师的课时间过得太快了，难题一听就懂！"—— 同学们说<br>
+          "孩子从怕数学到天天盼着上课，好像换了个人！"—— 家长反馈
+        </div>
+        <div class="course-grid">
+          <div class="course-item">
+            <div class="ci-title">🔢 有理数运算</div>
+            <div class="ci-desc">正负数、数轴、绝对值、四则混合运算，练就扎实计算功底</div>
+          </div>
+          <div class="course-item">
+            <div class="ci-title">📐 代数思维转型</div>
+            <div class="ci-desc">整式加减、一元一次方程，从"算术"平稳过渡到"代数"</div>
+          </div>
+          <div class="course-item">
+            <div class="ci-title">📏 几何基础入门</div>
+            <div class="ci-desc">线段与角的度量与计算，初步建立几何直观</div>
+          </div>
+          <div class="course-item">
+            <div class="ci-title">💡 数学思想渗透</div>
+            <div class="ci-desc">分类讨论、数形结合、整体思想，提前具备高效应试思维</div>
+          </div>
+        </div>
+        <div class="benefit-tags">
+          <span class="benefit-tag">► 提前攻克初一"拦路虎"</span>
+          <span class="benefit-tag">► 计算准、步骤清、有逻辑</span>
+          <span class="benefit-tag">► 种下"数学很有趣"的种子</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第4页：英语 -->
+  <section class="slide" id="slide-4">
+    <div class="tag" style="margin-bottom:18px">🔤 英语衔接课</div>
+    <div class="teacher-card fade-up">
+      <div class="teacher-info">
+        <div class="teacher-name">刘老师 · 英语</div>
+        <div class="teacher-bio">
+          初中英语一级教师，<strong>11年</strong>一线教学经验，校优秀班主任<br>
+          "英语课是最好的游戏时间。"—— 孩子们说<br>
+          "刘老师从不吼孩子，但孩子英语学得特别扎实。"—— 家长评价
+        </div>
+        <div class="course-grid">
+          <div class="course-item">
+            <div class="ci-title">🔊 音标与拼读突破</div>
+            <div class="ci-desc">国际音标系统学习 + 自然拼读强化，见词能读、听音能写</div>
+          </div>
+          <div class="course-item">
+            <div class="ci-title">📚 词汇记忆法</div>
+            <div class="ci-desc">告别死记硬背，掌握词根、语境、联想记忆等科学方法</div>
+          </div>
+          <div class="course-item">
+            <div class="ci-title">✏️ 语法框架搭建</div>
+            <div class="ci-desc">一般/现在进行时、there be 句型等核心语法清晰讲透</div>
+          </div>
+          <div class="course-item">
+            <div class="ci-title">🎤 听说训练</div>
+            <div class="ci-desc">角色扮演、情景对话、听力技巧专项，让孩子敢开口、能听懂</div>
+          </div>
+        </div>
+        <div class="benefit-tags">
+          <span class="benefit-tag">► 发音标准，单词记忆效率翻倍</span>
+          <span class="benefit-tag">► 语法体系提前建立结构感</span>
+          <span class="benefit-tag">► 在鼓励中爱上说英语</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第5页：品牌页 -->
+  <section class="slide" id="slide-5">
+    <div class="brand-box">
+      <div class="brand-logo fade-up">育见未来</div>
+      <div class="brand-slogan fade-up fade-up-d1">育见未来 · 陪伴成长</div>
+      <div class="brand-intro fade-up fade-up-d2">
+        "育见未来"专注小学至初中全科衔接教育，秉持<strong>"育见未来、陪伴成长"</strong>的初心，
+        汇聚一批教学一线深耕10年以上的优秀教师。我们不止教授知识，更愿做孩子初中第一步的陪伴者与引路人。
+      </div>
+      <div class="feedback-imgs fade-up fade-up-d3">
+        <div class="feedback-img-wrap">
+          <img class="feedback-img" src="家长好评001.jpg" alt="家长好评001">
+        </div>
+        <div class="feedback-img-wrap">
+          <img class="feedback-img" src="家长好评002.jpg" alt="家长好评002">
+        </div>
+        <div class="feedback-img-wrap">
+          <img class="feedback-img" src="家长好评004.jpg" alt="家长好评004">
+          <div class="img-caption"></div>
+<!--  感谢老师如此有温度的教育，遇见你是孩子们的幸运。-->
+        </div>
+      </div>
+      <div class="info-row fade-up fade-up-d4">
+        <div class="info-item"><span class="icon">📅</span> 2026年7月第一周开课</div>
+        <div class="info-item"><span class="icon">📚</span> 共 15 次课</div>
+        <div class="info-item"><span class="icon">📝</span> 语文 · 数学 · 英语</div>
+      </div>
+      <div class="fade-up fade-up-d4">
+        <a class="brand-cta" href="#">📞 名额有限，即刻预约咨询</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- 进度条 -->
+<div class="progress-bar" id="progressBar"></div>
+<div class="slide-counter" id="slideCounter">1 / 5</div>
+<div class="hint">← → 键或空格键翻页 · 点击顶部圆圈跳转 · 手机支持滑动翻页</div>
+
+<script>
+let current = 0;
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.nav-dot');
+const total = slides.length;
+
+function goTo(idx) {
+  if (idx < 0 || idx >= total) return;
+  slides[current].classList.remove('is-active');
+  dots[current].classList.remove('active');
+  current = idx;
+  slides[current].classList.add('is-active');
+  dots[current].classList.add('active');
+  document.getElementById('progressBar').style.width = ((current + 1) / total * 100) + '%';
+  document.getElementById('slideCounter').textContent = (current + 1) + ' / ' + total;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); goTo(current + 1); }
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goTo(current - 1); }
+  if (e.key === 'Home') goTo(0);
+  if (e.key === 'End') goTo(total - 1);
+});
+
+// 初始化进度条
+document.getElementById('progressBar').style.width = (1 / total * 100) + '%';
+
+// 触摸滑动支持
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
+document.addEventListener('touchend', e => {
+  const diff = e.changedTouches[0].screenX - touchStartX;
+  if (diff > 60) goTo(current - 1);
+  if (diff < -60) goTo(current + 1);
+});
+</script>
+</body>
+</html>
