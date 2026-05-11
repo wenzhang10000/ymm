@@ -71,7 +71,8 @@ body::after {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px 60px;
+  padding: 60px 60px 40px;
+  justify-content: flex-start;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.5s ease;
@@ -182,6 +183,7 @@ body::after {
 .slide1-subtitle {
   font-size: 15px;
   color: var(--color-text-light);
+  margin-top: 12px;
   margin-bottom: 22px;
   line-height: 1.7;
 }
@@ -197,11 +199,13 @@ body::after {
   font-size: 14.5px;
   line-height: 1.9;
   color: var(--color-text);
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  text-indent: 2em;
 }
 .slide1-card .highlight {
   color: var(--color-primary);
   font-weight: 700;
+  text-decoration: underline wavy #e74c3c;
 }
 .slide1-cta {
   text-align: center;
@@ -220,6 +224,9 @@ body::after {
   transition: transform 0.2s;
 }
 .slide1-cta .cta-btn:hover { transform: translateY(-2px); }
+
+/* 第2/3/4页恢复垂直居中 */
+#slide-2, #slide-3, #slide-4 { justify-content: center; }
 
 /* ========== 第2/3/4页：课程页通用 ========== */
 .teacher-card {
@@ -316,6 +323,7 @@ body::after {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  margin-top: 20px;
   margin-bottom: 6px;
 }
 .brand-slogan {
@@ -409,6 +417,69 @@ body::after {
   opacity: 0.6;
   z-index: 101;
 }
+
+/* ── 移动端适配 ── */
+@media (max-width: 768px) {
+  .slide {
+    padding: 56px 20px 30px !important;
+    justify-content: flex-start !important;
+  }
+  .slide1-box { max-width: 100%; }
+  .slide1-title { font-size: 20px; }
+  .slide1-subtitle { font-size: 14px; margin-top: 8px; }
+  .slide1-card {
+    padding: 20px 18px;
+    border-left-width: 4px;
+  }
+  .slide1-card p {
+    font-size: 13.5px;
+    line-height: 1.95;
+    text-indent: 2em;
+    margin-bottom: 12px;
+  }
+  .slide1-card .highlight {
+    text-decoration: underline wavy #e74c3c;
+    text-underline-offset: 3px;
+  }
+  .slide1-cta .cta-btn { font-size: 14px; padding: 10px 28px; }
+
+  /* 第2/3/4页：恢复居中但减少上边距 */
+  #slide-2, #slide-3, #slide-4 {
+    justify-content: center !important;
+    padding-top: 56px !important;
+  }
+  .teacher-name { font-size: 18px; }
+  .teacher-bio { font-size: 12.5px; }
+  .course-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+  .course-item { padding: 12px 14px; }
+  .ci-title { font-size: 13px; }
+  .ci-desc { font-size: 11.5px; }
+  .benefit-tags { gap: 6px; }
+  .benefit-tag { font-size: 11px; padding: 4px 10px; }
+
+  /* 第5页 */
+  #slide-5 { padding-top: 56px !important; }
+  .brand-logo { font-size: 32px; margin-top: 10px; }
+  .brand-slogan { font-size: 15px; letter-spacing: 1px; }
+  .brand-intro { font-size: 13px; line-height: 1.9; padding: 0 8px; }
+  .feedback-grid { gap: 12px; }
+  .feedback-item { padding: 16px 18px; }
+  .fi-name { font-size: 12px; }
+  .fi-text { font-size: 12px; line-height: 1.7; }
+  .info-row { gap: 14px; margin-bottom: 14px; }
+  .info-item { font-size: 13px; }
+  .brand-cta { font-size: 14px; padding: 10px 28px; }
+
+  .top-nav { padding: 10px 12px; gap: 8px; }
+  .nav-dot { width: 28px; height: 28px; font-size: 11px; }
+  .progress-bar { height: 3px; }
+  .slide-counter { font-size: 12px; bottom: 8px; right: 14px; }
+  .hint { font-size: 11px; bottom: 8px; }
+}
+
 </style>
 </head>
 <body>
@@ -438,8 +509,7 @@ body::after {
         <p>作为父母，您在欣慰之余，是否也隐隐有些担忧？</p>
         <p>▸ 换了新学校、新老师、新同学，孩子能快速适应初中新环境吗？<br>
            ▸ 课程从"语数英"一下变成"多科目齐头并进"，孩子跟不上学习节奏怎么办？<br>
-           ▸ 长达两个月的暑假，既怕荒废又怕硬灌，到底该怎么帮孩子做好衔接规划？<br>
-           ▸ 青春期遇上新阶段，孩子心里话变少了，怎么才能在放手的同时给到支撑？</p>
+           ▸ 长达两个月的暑假，既怕荒废又怕硬灌，到底该怎么帮孩子做好衔接规划？</p>
         <p>这些困惑与焦虑，我们都深深理解。</p>
       </div>
       <div class="slide1-cta fade-up fade-up-d4">
