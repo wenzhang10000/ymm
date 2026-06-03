@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<title>2026年六月营销日历 - 业美美信息技术</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  width: 1080px;
+  font-family: 'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;
+  background: #f5fbf7;
+}
+
+.page {
+  width: 1080px;
+  background: linear-gradient(170deg, #e3f7ec 0%, #cceee0 18%, #b8e8f5 55%, #c8f0f8 80%, #d0eff5 100%);
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 48px;
+}
+
+/* ============= 背景装饰 ============= */
+.bg-blob1 {
+  position:absolute; width:600px; height:600px; border-radius:50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.28) 0%, transparent 70%);
+  top:-200px; left:-150px; pointer-events:none;
+}
+.bg-blob2 {
+  position:absolute; width:450px; height:450px; border-radius:50%;
+  background: radial-gradient(circle, rgba(60,190,130,0.12) 0%, transparent 70%);
+  bottom:100px; right:-80px; pointer-events:none;
+}
+.bg-blob3 {
+  position:absolute; width:300px; height:300px; border-radius:50%;
+  background: radial-gradient(circle, rgba(100,200,240,0.15) 0%, transparent 70%);
+  top:400px; right:80px; pointer-events:none;
+}
+
+/* ============= HEADER ============= */
+.header {
+  position:relative;
+  padding: 44px 60px 0;
+  display:flex;
+  align-items:flex-end;
+  gap:24px;
+}
+
+.header-text { flex:1; }
+
+.main-title {
+  font-size: 72px;
+  font-weight: 900;
+  color: #135f3a;
+  letter-spacing: 8px;
+  line-height: 1;
+  text-shadow: 0 3px 12px rgba(0,100,60,0.18), 0 1px 0 rgba(255,255,255,0.6);
+  margin-bottom: 10px;
+}
+
+.sub-en {
+  font-size: 16px;
+  color: #2e9e6b;
+  letter-spacing: 5px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.header-deco { flex-shrink:0; }
+
+/* ============= 月历 ============= */
+.calendar-wrap {
+  margin: 30px 60px 0;
+  background: rgba(255,255,255,0.82);
+  border-radius: 22px;
+  padding: 22px 28px;
+  box-shadow: 0 6px 30px rgba(0,90,50,0.10), 0 1px 0 rgba(255,255,255,0.8) inset;
+  backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(46,158,107,0.18);
+}
+
+.cal-top {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom: 14px;
+}
+
+.cal-month-label {
+  font-size: 18px;
+  font-weight: 800;
+  color: #135f3a;
+  letter-spacing: 3px;
+}
+
+.cal-legend {
+  display:flex;
+  gap:14px;
+  align-items:center;
+}
+
+.legend-item {
+  display:flex;
+  align-items:center;
+  gap:5px;
+  font-size:12px;
+  color:#555;
+}
+
+.legend-dot {
+  width:10px; height:10px;
+  border-radius:3px;
+}
+
+.cal-table {
+  width:100%;
+  border-collapse:separate;
+  border-spacing: 5px;
+}
+
+.cal-table th {
+  text-align:center;
+  padding: 6px 0;
+  font-size:13px;
+  font-weight:700;
+  color:#2e9e6b;
+}
+
+.cal-table th.wk { color:#e74c3c; }
+
+.cal-table td {
+  text-align:center;
+  vertical-align:middle;
+  border-radius:12px;
+  padding:6px 2px;
+  font-size:18px;
+  font-weight:700;
+  color:#333;
+  height:58px;
+  width:14.28%;
+  position:relative;
+  transition:all 0.2s;
+}
+
+.cal-table td.wk { color:#e74c3c; }
+
+.cal-lbl {
+  display:block;
+  font-size:10px;
+  line-height:1.3;
+  margin-top:2px;
+  font-weight:600;
+}
+
+/* 节日样式 */
+.ev-c { background:linear-gradient(135deg,#ff6b9d,#ff8040); color:white!important; box-shadow:0 4px 14px rgba(255,80,130,0.35); }
+.ev-g { background:linear-gradient(135deg,#667eea,#8b5cf6); color:white!important; box-shadow:0 4px 14px rgba(100,90,220,0.35); }
+.ev-d { background:linear-gradient(135deg,#2ecc71,#16a34a); color:white!important; box-shadow:0 4px 14px rgba(30,160,80,0.35); }
+.ev-f { background:linear-gradient(135deg,#f59e0b,#ea8020); color:white!important; box-shadow:0 4px 14px rgba(240,150,20,0.35); }
+.ev-r { background:linear-gradient(135deg,#ef4444,#dc2626); color:white!important; box-shadow:0 4px 14px rgba(230,50,50,0.35); }
+.ev-j { background:rgba(46,158,107,0.15); color:#135f3a!important; border:1.5px solid rgba(46,158,107,0.3); }
+
+.ev-c .cal-lbl,.ev-g .cal-lbl,.ev-d .cal-lbl,.ev-f .cal-lbl,.ev-r .cal-lbl {
+  color:rgba(255,255,255,0.92);
+}
+.ev-j .cal-lbl { color:#135f3a; }
+
+/* ============= 节气条 ============= */
+.jieqi-bar {
+  margin: 18px 60px 0;
+  background: rgba(255,255,255,0.65);
+  border-radius: 14px;
+  padding: 13px 24px;
+  border: 1.5px solid rgba(46,158,107,0.22);
+  display:flex;
+  align-items:center;
+}
+
+.jq-title {
+  font-size:13px;
+  font-weight:800;
+  color:#2e9e6b;
+  letter-spacing:2px;
+  padding-right:20px;
+  border-right:2px solid rgba(46,158,107,0.25);
+  margin-right:20px;
+  white-space:nowrap;
+}
+
+.jq-items {
+  display:flex;
+  gap:30px;
+  flex-wrap:wrap;
+}
+
+.jq-item {
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-size:13px;
+  color:#333;
+}
+
+.jq-dot {
+  width:9px; height:9px;
+  border-radius:50%;
+}
+
+.jq-date { font-weight:800; }
+
+/* ============= 节日卡片区 ============= */
+.events {
+  margin: 22px 60px 0;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+.ecard {
+  background: rgba(255,255,255,0.88);
+  border-radius: 20px;
+  overflow:hidden;
+  box-shadow: 0 6px 26px rgba(0,80,50,0.09), 0 1px 0 rgba(255,255,255,0.9) inset;
+  border: 1.5px solid rgba(255,255,255,0.7);
+}
+
+/* 卡片头部颜色 */
+.eh-c { background:linear-gradient(135deg,#ff6b9d 0%,#ff8040 100%); }
+.eh-g { background:linear-gradient(135deg,#667eea 0%,#8b5cf6 100%); }
+.eh-d { background:linear-gradient(135deg,#2ecc71 0%,#16a34a 100%); }
+.eh-f { background:linear-gradient(135deg,#f59e0b 0%,#ea8020 100%); }
+.eh-r { background:linear-gradient(135deg,#ef4444 0%,#dc2626 100%); }
+
+.ecard-head {
+  padding: 16px 26px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.e-icon {
+  width:48px; height:48px;
+  border-radius:14px;
+  background:rgba(255,255,255,0.28);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:26px;
+  flex-shrink:0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+.e-info { flex:1; }
+
+.e-date {
+  font-size:13px;
+  color:rgba(255,255,255,0.82);
+  font-weight:500;
+  margin-bottom:3px;
+}
+
+.e-name {
+  font-size:26px;
+  font-weight:900;
+  color:white;
+  letter-spacing:3px;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.ecard-body {
+  padding: 20px 26px;
+  display:grid;
+  grid-template-columns: 230px 1px 1fr;
+  gap:0 18px;
+}
+
+/* 关键词区 */
+.kw-box h5 {
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:3px;
+  color:#aaa;
+  margin-bottom:10px;
+  text-transform:uppercase;
+}
+
+.kw-list {
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+}
+
+.kw {
+  padding: 5px 14px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.kw-c { background:#fff0f5; color:#e0306a; border:1.5px solid #ffc0d8; }
+.kw-g { background:#f0f0ff; color:#5050d0; border:1.5px solid #c0c0f0; }
+.kw-d { background:#edfff5; color:#0d7a3a; border:1.5px solid #90d8b0; }
+.kw-f { background:#fff8e8; color:#b86010; border:1.5px solid #f0c870; }
+.kw-r { background:#fff0f0; color:#c02020; border:1.5px solid #f0a0a0; }
+
+/* 分割线 */
+.vline {
+  background: linear-gradient(to bottom, transparent 0%, #e0e0e0 20%, #e0e0e0 80%, transparent 100%);
+  width:1.5px;
+  align-self:stretch;
+}
+
+/* 建议区 */
+.sug-box h5 {
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:3px;
+  color:#aaa;
+  margin-bottom:10px;
+  text-transform:uppercase;
+}
+
+.sug-item {
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  margin-bottom:9px;
+}
+
+.sug-num {
+  width:22px; height:22px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  font-weight:800;
+  color:white;
+  flex-shrink:0;
+  margin-top:1px;
+}
+
+.sn-c { background:#ff6b9d; }
+.sn-g { background:#667eea; }
+.sn-d { background:#2ecc71; }
+.sn-f { background:#f59e0b; }
+.sn-r { background:#ef4444; }
+
+.sug-text {
+  font-size:13px;
+  color:#404040;
+  line-height:1.75;
+  flex:1;
+}
+
+.sug-text strong { color:#1a1a1a; font-weight:700; }
+
+.hl { color:#c0392b; font-weight:700; }
+
+/* 实体店落地标签 */
+.store-tag {
+  display:inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1px;
+  margin-right:6px;
+  vertical-align:middle;
+}
+.store-tag-c { background:#ffe0ec; color:#e0306a; }
+.store-tag-g { background:#e8e4ff; color:#5050d0; }
+.store-tag-d { background:#d4fce8; color:#0d7a3a; }
+.store-tag-f { background:#fff0d0; color:#b86010; }
+.store-tag-r { background:#ffe0e0; color:#c02020; }
+
+/* ============= FOOTER ============= */
+.footer {
+  margin: 28px 60px 0;
+  background: linear-gradient(135deg, #135f3a 0%, #1a8a50 60%, #16a34a 100%);
+  border-radius: 20px;
+  padding: 22px 32px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  box-shadow: 0 6px 24px rgba(10,80,40,0.28);
+}
+
+.footer-year {
+  font-size:13px;
+  color:rgba(255,255,255,0.65);
+  letter-spacing:2px;
+  margin-bottom:5px;
+}
+
+.footer-brand {
+  font-size:22px;
+  font-weight:900;
+  color:white;
+  letter-spacing:3px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.footer-right {
+  display:flex;
+  gap:28px;
+  align-items:center;
+}
+
+.footer-tags {
+  font-size:13px;
+  color:rgba(255,255,255,0.75);
+  line-height:1.9;
+  text-align:right;
+}
+
+.footer-emblem {
+  width:60px; height:60px;
+  border-radius:50%;
+  background: rgba(255,255,255,0.18);
+  border: 2px solid rgba(255,255,255,0.35);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- 背景装饰 -->
+  <div class="bg-blob1"></div>
+  <div class="bg-blob2"></div>
+  <div class="bg-blob3"></div>
+
+  <!-- ===== HEADER ===== -->
+  <div class="header">
+    <div class="header-text">
+      <div class="main-title">2026六月营销日历</div>
+      <div class="sub-en">June 2026 · Marketing Calendar</div>
+    </div>
+    <div class="header-deco">
+      <svg width="310" height="150" viewBox="0 0 310 150" style="filter:drop-shadow(0 6px 16px rgba(0,100,60,0.18));">
+        <path d="M0 118 Q40 108 80 118 Q120 128 160 118 Q200 108 240 118 Q275 126 310 118" stroke="#4dd0aa" stroke-width="2.5" fill="none" opacity="0.55"/>
+        <path d="M0 128 Q40 118 80 128 Q120 138 160 128 Q200 118 240 128 Q275 136 310 128" stroke="#4dd0aa" stroke-width="2" fill="none" opacity="0.35"/>
+        <path d="M10 110 Q50 100 90 110 Q130 120 170 110 Q210 100 250 110 Q280 116 310 110" stroke="#80e8cc" stroke-width="1.5" fill="none" opacity="0.4"/>
+        <defs>
+          <linearGradient id="boatGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#f5c840"/>
+            <stop offset="100%" style="stop-color:#e8920a"/>
+          </linearGradient>
+        </defs>
+        <path d="M35 112 Q80 90 155 95 Q215 90 265 106 Q248 118 155 121 Q70 124 35 112Z" fill="url(#boatGrad2)" stroke="#c07010" stroke-width="1.5"/>
+        <path d="M60 110 Q120 100 180 104 Q230 100 255 108" stroke="#c07010" stroke-width="1" fill="none" opacity="0.5"/>
+        <ellipse cx="275" cy="97" rx="28" ry="18" fill="#2ecc71" stroke="#16a34a" stroke-width="1.5"/>
+        <ellipse cx="284" cy="91" rx="10" ry="8" fill="#27ae60"/>
+        <circle cx="290" cy="89" r="5" fill="white"/>
+        <circle cx="291" cy="89" r="3" fill="#1a1a1a"/>
+        <circle cx="292.5" cy="87.5" r="1" fill="white"/>
+        <path d="M298 95 Q308 88 312 85" stroke="#f59e0b" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M298 98 Q310 94 314 92" stroke="#f59e0b" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M282 103 Q295 98 298 100 Q295 108 282 108Z" fill="#f5c840" stroke="#e8920a" stroke-width="1"/>
+        <path d="M35 112 Q20 105 8 95 Q15 90 25 98 Q12 85 5 78 Q15 75 28 88 Q18 72 15 62 Q26 62 35 76" stroke="#2ecc71" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="100" cy="89" r="10" fill="#fde9c0" stroke="#d09050" stroke-width="1.2"/>
+        <rect x="92" y="98" width="16" height="13" rx="5" fill="#4dd0aa" stroke="#2aaa80" stroke-width="1"/>
+        <circle cx="128" cy="87" r="10" fill="#fde9c0" stroke="#d09050" stroke-width="1.2"/>
+        <rect x="120" y="96" width="16" height="13" rx="5" fill="#667eea" stroke="#4a5cd0" stroke-width="1"/>
+        <circle cx="156" cy="88" r="10" fill="#fde9c0" stroke="#d09050" stroke-width="1.2"/>
+        <rect x="148" y="97" width="16" height="13" rx="5" fill="#ff6b9d" stroke="#e0507a" stroke-width="1"/>
+        <circle cx="74" cy="90" r="9" fill="#fde9c0" stroke="#d09050" stroke-width="1.2"/>
+        <rect x="67" y="99" width="14" height="12" rx="4" fill="#f59e0b"/>
+        <ellipse cx="74" cy="105" rx="14" ry="8" fill="#e8920a" stroke="#c07010" stroke-width="1.2"/>
+        <ellipse cx="74" cy="103" rx="14" ry="6" fill="#f5c840" stroke="#c07010" stroke-width="1"/>
+        <line x1="108" y1="100" x2="92" y2="122" stroke="#8B4513" stroke-width="3.5" stroke-linecap="round"/>
+        <ellipse cx="89" cy="125" rx="10" ry="4.5" fill="#8B4513" transform="rotate(-25 89 125)"/>
+        <line x1="140" y1="98" x2="123" y2="120" stroke="#8B4513" stroke-width="3.5" stroke-linecap="round"/>
+        <ellipse cx="120" cy="123" rx="10" ry="4.5" fill="#8B4513" transform="rotate(-20 120 123)"/>
+        <line x1="168" y1="100" x2="152" y2="122" stroke="#8B4513" stroke-width="3.5" stroke-linecap="round"/>
+        <ellipse cx="149" cy="125" rx="10" ry="4.5" fill="#8B4513" transform="rotate(-20 149 125)"/>
+        <line x1="200" y1="118" x2="200" y2="72" stroke="#dc2626" stroke-width="2.5"/>
+        <path d="M200 72 L226 81 L200 90Z" fill="#ef4444" stroke="#dc2626" stroke-width="0.5"/>
+        <text x="205" y="83" font-size="9" fill="white" font-weight="bold">龙</text>
+        <polygon points="245,72 255,88 235,88" fill="#2ecc71" stroke="#16a34a" stroke-width="1.5"/>
+        <line x1="245" y1="65" x2="245" y2="72" stroke="#8B4513" stroke-width="1.5"/>
+        <circle cx="245" cy="63" r="3" fill="#f59e0b"/>
+        <ellipse cx="22" cy="118" rx="16" ry="8" fill="#2ecc71" opacity="0.6" transform="rotate(-15 22 118)"/>
+        <ellipse cx="8" cy="122" rx="12" ry="6" fill="#16a34a" opacity="0.5" transform="rotate(10 8 122)"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ===== 月历：2026年6月（6月1日周一）===== -->
+  <div class="calendar-wrap">
+    <div class="cal-top">
+      <div class="cal-month-label">📅 2026年 · 六月</div>
+      <div class="cal-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(135deg,#ff6b9d,#ff8040)"></div>传统节日</div>
+        <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(135deg,#667eea,#8b5cf6)"></div>社会事件</div>
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(46,158,107,0.25);border:1px solid #2e9e6b"></div>节气</div>
+      </div>
+    </div>
+    <table class="cal-table">
+      <thead>
+        <tr>
+          <th>周一</th><th>周二</th><th>周三</th><th>周四</th><th>周五</th>
+          <th class="wk">周六</th><th class="wk">周日</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- 6月1日周一 -->
+        <tr>
+          <td class="ev-c">1<span class="cal-lbl">儿童节</span></td>
+          <td>2</td><td>3</td><td>4</td><td>5</td>
+          <td class="ev-j wk">6<span class="cal-lbl">芒种</span></td>
+          <td class="ev-g wk">7<span class="cal-lbl">高考</span></td>
+        </tr>
+        <tr>
+          <td class="ev-g">8<span class="cal-lbl">高考</span></td>
+          <td>9</td><td>10</td><td>11</td><td>12</td>
+          <td class="wk">13</td><td class="wk">14</td>
+        </tr>
+        <tr>
+          <td>15</td><td>16</td><td>17</td><td>18</td><td>19</td>
+          <td class="ev-d wk">20<span class="cal-lbl">端午节</span></td>
+          <td class="ev-f wk">21<span class="cal-lbl">夏至/父亲节</span></td>
+        </tr>
+        <tr>
+          <td>22</td><td>23</td><td>24</td><td>25</td>
+          <td class="ev-r">26<span class="cal-lbl">禁毒日</span></td>
+          <td class="wk">27</td><td class="wk">28</td>
+        </tr>
+        <tr>
+          <td>29</td><td>30</td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== 节气栏 ===== -->
+  <div class="jieqi-bar">
+    <div class="jq-title">🌿 节气</div>
+    <div class="jq-items">
+      <div class="jq-item">
+        <div class="jq-dot" style="background:#2e9e6b"></div>
+        <span class="jq-date" style="color:#2e9e6b">6月6日 芒种</span>
+        <span style="color:#555">· 仲夏耕耘，草木繁盛</span>
+      </div>
+      <div class="jq-item">
+        <div class="jq-dot" style="background:#f59e0b"></div>
+        <span class="jq-date" style="color:#e8920a">6月21日 夏至</span>
+        <span style="color:#555">· 阳光最足，白昼最长</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 节日营销卡片 ===== -->
+  <div class="events">
+
+    <!-- 六一儿童节 -->
+    <div class="ecard">
+      <div class="ecard-head eh-c">
+        <div class="e-icon">🎈</div>
+        <div class="e-info">
+          <div class="e-date">6月1日 · 周一</div>
+          <div class="e-name">儿童节</div>
+        </div>
+      </div>
+      <div class="ecard-body">
+        <div class="kw-box">
+          <h5>关 键 词</h5>
+          <div class="kw-list">
+            <span class="kw kw-c">#回忆#</span>
+            <span class="kw kw-c">#童真#</span>
+            <span class="kw kw-c">#童心#</span>
+            <span class="kw kw-c">#陪伴#</span>
+            <span class="kw kw-c">#六一快乐#</span>
+          </div>
+        </div>
+        <div class="vline"></div>
+        <div class="sug-box">
+          <h5>营 销 建 议</h5>
+          <div class="sug-item">
+            <div class="sug-num sn-c">①</div>
+            <div class="sug-text"><strong>借势营销：</strong>搭配上线商城专属儿童节活动，组合后台拼团/砍价/秒杀/抽奖，促进品牌曝光与商品销量转化。文案参考：<span class="hl">「六一欢乐喜年华」「6.1与你童享好礼」</span></div>
+          </div>
+          <div class="sug-item">
+            <div class="sug-num sn-c">②</div>
+            <div class="sug-text"><strong>回忆童年：</strong>切入怀旧特色，主打70、80、90、00后童年场景，话题如<span class="hl">「谁还不是个宝」</span>，引发情感共鸣，与品牌产生联系。</div>
+          </div>
+          <div class="sug-item">
+            <div class="sug-num sn-c">③</div>
+            <div class="sug-text"><span class="store-tag store-tag-c">门店落地</span><strong>亲子到店有礼：</strong>消费满额送儿童玩具/气球；设置店门口拍照打卡点（气球拱门+卡通立牌），引导家长发朋友圈带门店定位，集赞兑换小礼品。母婴/餐饮/零售店都适用。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 高考 -->
+    <div class="ecard">
+      <div class="ecard-head eh-g">
+        <div class="e-icon">📚</div>
+        <div class="e-info">
+          <div class="e-date">6月7日 · 周日 ~ 8日·周一</div>
+          <div class="e-name">高考</div>
+        </div>
+      </div>
+      <div class="ecard-body">
+        <div class="kw-box">
+          <h5>关 键 词</h5>
+          <div class="kw-list">
+            <span class="kw kw-g">#考试秘诀#</span>
+            <span class="kw kw-g">#录取通知书#</span>
+            <span class="kw kw-g">#打call#</span>
+            <span class="kw kw-g">#倒计时#</span>
+          </div>
+        </div>
+        <div class="vline"></div>
+        <div class="sug-box">
+          <h5>营 销 建 议</h5>
+          <div class="sug-item">
+            <div class="sug-num sn-g">①</div>
+            <div class="sug-text"><strong>海报宣传：</strong>搭配温情、励志、幽默文字，扫码领取专属海报。参考：<span class="hl">「高考必胜头像」「扫码领取高考幸运符」「高考录取放榜喜报」</span></div>
+          </div>
+          <div class="sug-item">
+            <div class="sug-num sn-g">②</div>
+            <div class="sug-text"><strong>高考情怀互动：</strong>通过微传单留言板进行话题互动：<span class="hl">「那年高考，印象最深的是什么？」</span>利用话题与品牌产生联系。</div>
+          </div>
+          <div class="sug-item">
+            <div class="sug-num sn-g">③</div>
+            <div class="sug-text"><span class="store-tag store-tag-g">门店落地</span><strong>考生专属福利：</strong>凭准考证到店消费打折/赠送饮品小食；店外拉横幅<span class="hl">「高考学子免费领水/休息」</span>，为陪考家长提供免费座位和充电。考完后推<span class="hl">「谢师宴」</span>套餐预定。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 端午节 -->
+    <div class="ecard">
+      <div class="ecard-head eh-d">
+        <div class="e-icon">🍃</div>
+        <div class="e-info">
+          <div class="e-date">6月20日 · 周六（端午假期）</div>
+          <div class="e-name">端午节</div>
+        </div>
+      </div>
+      <div class="ecard-body">
+        <div class="kw-box">
+          <h5>关 键 词</h5>
+          <div class="kw-list">
+            <span class="kw kw-d">#端午#</span>
+            <span class="kw kw-d">#划龙舟#</span>
+            <span class="kw kw-d">#粽子#</span>
+            <span class="kw kw-d">#假期出游#</span>
+          </div>
+        </div>
+        <div class="vline"></div>
+        <div class="sug-box">
+          <h5>营 销 建 议</h5>
+          <div class="sug-item">
+            <div class="sug-num sn-d">①</div>
+            <div class="sug-text"><strong>端午习俗科普：</strong>制作节日热点海报，设置端午知识问答活动，将习俗融入题目中，根据答题结果抽取小礼品。</div>
+          </div>
+          <div class="sug-item">
+            <div class="sug-num sn-d">②</div>
+            <div class="sug-text"><strong>节日礼包活动：</strong>主题参考：<span class="hl">「粽意传情，粽享好礼」「粽情端午，秒杀特惠」「甜粽咸粽大PK」「扫码领包，带点粽回家」</span></div>
+          </div>
+          <div class="sug-item">
+            <div class="sug-num sn-d">③</div>
+            <div class="sug-text"><span class="store-tag store-tag-d">门店落地</span><strong>端午氛围打造+到店引流：</strong>门口挂艾草、摆粽子展示台；消费满额<span class="hl">送手工粽子/艾草香包</span>；推出<span class="hl">「端午家庭套餐」</span>；提前一周在朋友圈发"到店免费领五彩绳"，吸引周边居民到店打卡，成本低效果直接。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 父亲节 -->
+    <div class="ecard">
+      <div class="ecard-head eh-f">
+        <div class="e-icon">👨‍👧</div>
+        <div class="e-info">
+          <div class="e-date">6月21日 · 周日</div>
+          <div class="e-name">父亲节</div>
+        </div>
+      </div>
+      <div class="ecard-body">
+        <div class="kw-box">
+          <h5>关 键 词</h5>
+          <div class="kw-list">
+            <span class="kw kw-f">#父亲#</span>
+            <span class="kw kw-f">#父爱如山#</span>
+            <span class="kw kw-f">#感恩#</span>
+            <span class="kw kw-f">#陪伴成长#</span>
+          </div>
+        </div>
+        <div class="vline"></div>
+        <div class="sug-box">
+          <h5>营 销 建 议</h5>
+          <div class="sug-item">
+            <div class="sug-num sn-f">①</div>
+            <div class="sug-text"><strong>线上Banner更换：</strong>店铺、抖音、小红书等平台Banner/相册统一更换为主题活动页面，制作父亲节动态H5海报，发送至朋友圈等私域渠道。</div>
+          </div>
+          <div class="sug-item">
+            <div class="sug-num sn-f">②</div>
+            <div class="sug-text"><strong>海报文案营销：</strong>制作父亲节专属活动海报，参考：<span class="hl">「父亲节趣味父子对话」「创意父亲节聊天截图」「父亲节插画系列海报」</span>，趣味生动展示品牌形象。</div>
+          </div>
+          <div class="sug-item">
+            <div class="sug-num sn-f">③</div>
+            <div class="sug-text"><span class="store-tag store-tag-f">门店落地</span><strong>父子/父女专属优惠：</strong>父亲带孩子到店消费享<span class="hl">父子套餐8折</span>；设置"写给爸爸的明信片"留言墙，拍照发朋友圈送小礼品；推出父亲节<span class="hl">「给老爸的礼物」</span>专区（剃须刀/皮带/茶叶等），搭配礼品包装免费服务。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 国际禁毒日 -->
+    <div class="ecard">
+      <div class="ecard-head eh-r">
+        <div class="e-icon">🚫</div>
+        <div class="e-info">
+          <div class="e-date">6月26日 · 周五</div>
+          <div class="e-name">国际禁毒日</div>
+        </div>
+      </div>
+      <div class="ecard-body">
+        <div class="kw-box">
+          <h5>关 键 词</h5>
+          <div class="kw-list">
+            <span class="kw kw-r">#禁毒#</span>
+            <span class="kw kw-r">#健康生活#</span>
+            <span class="kw kw-r">#无毒青春#</span>
+            <span class="kw kw-r">#公益营销#</span>
+          </div>
+        </div>
+        <div class="vline"></div>
+        <div class="sug-box">
+          <h5>营 销 建 议</h5>
+          <div class="sug-item">
+            <div class="sug-num sn-r">①</div>
+            <div class="sug-text"><strong>公益借势传播：</strong>结合品牌发布禁毒公益内容，展示企业社会责任感，适合朋友圈、抖音等平台传播，提升品牌好感度。文案：<span class="hl">「无毒一身轻，青春最美丽」</span></div>
+          </div>
+          <div class="sug-item">
+            <div class="sug-num sn-r">②</div>
+            <div class="sug-text"><strong>知识科普内容：</strong>推送禁毒知识科普海报，设置互动答题，传播正能量，为品牌增添社会公益属性，获得更多用户认同。</div>
+          </div>
+          <div class="sug-item">
+            <div class="sug-num sn-r">③</div>
+            <div class="sug-text"><span class="store-tag store-tag-r">门店落地</span><strong>品牌公益形象升级：</strong>门店张贴<span class="hl">"健康生活"主题海报</span>，有条件可联合社区/街道办做公益宣传点位；配合推出<span class="hl">「健康季」</span>主题活动，关联健康食品/健身/养生类产品促销，借公益提升门店社区好感度。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <div class="footer">
+    <div class="footer-left">
+      <div class="footer-year">2026年 · 六月营销日历</div>
+      <div class="footer-brand">业美美信息技术制作</div>
+    </div>
+    <div class="footer-right">
+      <div class="footer-tags">
+        ✦ 专业营销策划<br>
+        ✦ 品牌视觉设计<br>
+        ✦ 全案运营服务
+      </div>
+      <div class="footer-emblem">🌿</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
