@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大脑的生物钟 · 昼夜节律信息图</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Noto+Sans+SC:wght@200;300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#fafaf8;
+  --paper-rgb:250,250,248;
+  --ink:#0a0a0a;
+  --ink-rgb:10,10,10;
+  --grey-1:#f0f0ee;
+  --grey-2:#d4d4d2;
+  --grey-3:#737373;
+  --accent:#002FA7;
+  --accent-rgb:0,47,167;
+  --accent-on:#ffffff;
+  --accent-bright:#5B7BFF;
+  --text-primary:#0a0a0a;
+  --text-secondary:#525252;
+  --text-helper:#737373;
+  --text-placeholder:#a3a3a3;
+  --border-subtle:#e0e0e0;
+  --border-strong:#a3a3a3;
+  --sans:"Inter","Helvetica Neue","Helvetica","Arial","Segoe UI Variable","Segoe UI",system-ui,-apple-system,sans-serif;
+  --sans-zh:"PingFang SC","Hiragino Sans GB","Source Han Sans SC","Noto Sans SC","Microsoft YaHei UI","Microsoft YaHei","微软雅黑",sans-serif;
+  --mono:"JetBrains Mono","IBM Plex Mono","SF Mono","Cascadia Code","Consolas","Courier New",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans),var(--sans-zh);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  min-height:100vh;
+  padding:0;
+}
+
+/* ======= 整体页面布局 ======= */
+.page{
+  max-width:1200px;
+  margin:0 auto;
+  padding:56px 48px 80px;
+}
+
+/* ======= Header ======= */
+.header{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:end;
+  gap:24px;
+  margin-bottom:56px;
+  padding-bottom:24px;
+  border-bottom:2px solid var(--ink);
+}
+.header-left{}
+.meta-tag{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  color:var(--accent);
+  font-weight:500;
+  margin-bottom:16px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.meta-tag::before{
+  content:"";
+  display:block;
+  width:24px;height:2px;
+  background:var(--accent);
+}
+.main-title{
+  font-family:var(--sans),var(--sans-zh);
+  font-weight:200;
+  font-size:clamp(48px, 6.4vw, 80px);
+  line-height:.94;
+  letter-spacing:-.03em;
+  color:var(--ink);
+}
+.main-title em{
+  font-style:normal;
+  color:var(--accent);
+}
+.header-right{
+  text-align:right;
+  padding-bottom:4px;
+}
+.subtitle{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--text-helper);
+  line-height:2;
+}
+
+/* ======= 曲线图区域 ======= */
+.chart-section{
+  margin-bottom:48px;
+}
+.section-label{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.26em;
+  text-transform:uppercase;
+  color:var(--text-helper);
+  margin-bottom:16px;
+}
+.chart-wrap{
+  position:relative;
+  width:100%;
+  height:180px;
+  background:var(--grey-1);
+  border-top:1px solid var(--border-subtle);
+  overflow:hidden;
+}
+/* 时间刻度轴 */
+.chart-axis{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:32px;
+  display:flex;
+  align-items:center;
+  padding:0 0;
+  border-top:1px solid var(--border-subtle);
+  background:var(--paper);
+}
+.time-tick{
+  position:absolute;
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:.1em;
+  color:var(--text-helper);
+  transform:translateX(-50%);
+  bottom:6px;
+}
+/* SVG 曲线 */
+.chart-svg{
+  position:absolute;
+  top:0;left:0;
+  width:100%;
+  height:148px;
+}
+
+/* ======= 时间段表格 ======= */
+.timeline-section{
+  margin-bottom:56px;
+}
+.timeline-grid{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:0;
+  border-top:1px solid var(--border-subtle);
+  border-left:1px solid var(--border-subtle);
+}
+.tl-cell{
+  padding:20px 18px 18px;
+  border-right:1px solid var(--border-subtle);
+  border-bottom:1px solid var(--border-subtle);
+  position:relative;
+  cursor:default;
+  transition:background .18s ease;
+}
+.tl-cell:hover{background:var(--grey-1);}
+.tl-cell.accent-cell{
+  background:var(--accent);
+  color:var(--accent-on);
+}
+.tl-cell.accent-cell .tl-time,
+.tl-cell.accent-cell .tl-brain,
+.tl-cell.accent-cell .tl-desc{
+  color:rgba(255,255,255,.75);
+}
+.tl-cell.accent-cell .tl-label{color:#fff;}
+.tl-cell.accent-cell .tl-icon{color:rgba(255,255,255,.5);}
+.tl-cell.dark-cell{
+  background:var(--ink);
+  color:var(--paper);
+}
+.tl-cell.dark-cell .tl-time,
+.tl-cell.dark-cell .tl-brain,
+.tl-cell.dark-cell .tl-desc{color:rgba(250,250,248,.65);}
+.tl-cell.dark-cell .tl-label{color:var(--paper);}
+.tl-time{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.18em;
+  color:var(--text-helper);
+  margin-bottom:10px;
+}
+.tl-icon{
+  font-size:20px;
+  margin-bottom:8px;
+  color:var(--accent);
+  display:block;
+  line-height:1;
+}
+.tl-cell.dark-cell .tl-icon{color:var(--accent-bright);}
+.tl-label{
+  font-family:var(--sans),var(--sans-zh);
+  font-weight:600;
+  font-size:13px;
+  line-height:1.3;
+  letter-spacing:-.01em;
+  margin-bottom:8px;
+  color:var(--ink);
+}
+.tl-brain{
+  font-family:var(--mono);
+  font-size:9.5px;
+  letter-spacing:.04em;
+  color:var(--text-secondary);
+  line-height:1.5;
+  margin-bottom:6px;
+}
+.tl-desc{
+  font-family:var(--sans),var(--sans-zh);
+  font-weight:300;
+  font-size:11.5px;
+  line-height:1.55;
+  color:var(--text-secondary);
+}
+
+/* ======= 警觉性条状图 ======= */
+.bar-section{
+  margin-bottom:56px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:32px;
+}
+.bar-group{}
+.bar-group-title{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.24em;
+  text-transform:uppercase;
+  color:var(--text-helper);
+  margin-bottom:16px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--border-subtle);
+}
+.bar-row{
+  display:grid;
+  grid-template-columns:72px 1fr 36px;
+  align-items:center;
+  gap:12px;
+  margin-bottom:10px;
+}
+.bar-time{
+  font-family:var(--mono);
+  font-size:9.5px;
+  letter-spacing:.08em;
+  color:var(--text-helper);
+  text-align:right;
+}
+.bar-track{
+  height:10px;
+  background:var(--grey-1);
+  border:1px solid var(--border-subtle);
+  overflow:hidden;
+  position:relative;
+}
+.bar-fill{
+  height:100%;
+  background:var(--accent);
+  transition:width .6s cubic-bezier(.4,.14,.3,1);
+  position:relative;
+}
+.bar-fill.low{background:var(--grey-3);}
+.bar-fill.mid{background:#7B9EE8;}
+.bar-fill.high{background:var(--accent);}
+.bar-fill.peak{background:var(--ink);}
+.bar-fill.warm{background:#B06020;}
+.bar-val{
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:.06em;
+  color:var(--text-helper);
+  text-align:right;
+}
+
+/* ======= 时型说明 ======= */
+.chronotype-section{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:0;
+  margin-bottom:56px;
+  border:1px solid var(--border-subtle);
+}
+.ct-cell{
+  padding:28px 24px;
+  border-right:1px solid var(--border-subtle);
+}
+.ct-cell:last-child{border-right:none;}
+.ct-icon{
+  font-size:28px;
+  margin-bottom:12px;
+  display:block;
+}
+.ct-type{
+  font-family:var(--sans),var(--sans-zh);
+  font-weight:600;
+  font-size:15px;
+  letter-spacing:-.01em;
+  margin-bottom:6px;
+}
+.ct-shift{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:10px;
+  font-weight:500;
+}
+.ct-desc{
+  font-family:var(--sans),var(--sans-zh);
+  font-weight:300;
+  font-size:12px;
+  line-height:1.6;
+  color:var(--text-secondary);
+}
+
+/* ======= 要点 ======= */
+.takeaway-section{
+  background:var(--ink);
+  color:var(--paper);
+  padding:40px 48px;
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:40px;
+  align-items:center;
+  margin-bottom:40px;
+}
+.takeaway-num{
+  font-family:var(--sans);
+  font-weight:200;
+  font-size:clamp(80px,9vw,120px);
+  line-height:1;
+  letter-spacing:-.04em;
+  color:var(--accent-bright);
+  white-space:nowrap;
+}
+.takeaway-content{}
+.takeaway-label{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.26em;
+  text-transform:uppercase;
+  color:rgba(250,250,248,.45);
+  margin-bottom:12px;
+}
+.takeaway-text{
+  font-family:var(--sans),var(--sans-zh);
+  font-weight:300;
+  font-size:clamp(16px,1.6vw,22px);
+  line-height:1.55;
+  color:var(--paper);
+}
+.takeaway-text strong{
+  font-weight:600;
+  color:#fff;
+}
+
+/* ======= Footer ======= */
+.footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding-top:20px;
+  border-top:1px solid var(--border-subtle);
+}
+.footer-meta{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--text-placeholder);
+}
+
+/* ======= 连续波形图 SVG 动画 ======= */
+@keyframes wave-in{
+  from{stroke-dashoffset:1200}
+  to{stroke-dashoffset:0}
+}
+.wave-path{
+  stroke-dasharray:1200;
+  stroke-dashoffset:1200;
+  animation:wave-in 2.4s cubic-bezier(.4,.14,.3,1) .3s forwards;
+}
+.wave-path-2{
+  stroke-dasharray:1200;
+  stroke-dashoffset:1200;
+  animation:wave-in 2.4s cubic-bezier(.4,.14,.3,1) .6s forwards;
+}
+
+/* 进入动效 */
+@keyframes fade-up{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.anim-1{animation:fade-up .7s cubic-bezier(.4,.14,.3,1) .1s both}
+.anim-2{animation:fade-up .7s cubic-bezier(.4,.14,.3,1) .25s both}
+.anim-3{animation:fade-up .7s cubic-bezier(.4,.14,.3,1) .4s both}
+.anim-4{animation:fade-up .7s cubic-bezier(.4,.14,.3,1) .55s both}
+.anim-5{animation:fade-up .7s cubic-bezier(.4,.14,.3,1) .7s both}
+.anim-6{animation:fade-up .7s cubic-bezier(.4,.14,.3,1) .85s both}
+
+/* 响应式 */
+@media(max-width:900px){
+  .page{padding:32px 24px 56px;}
+  .timeline-grid{grid-template-columns:repeat(2,1fr);}
+  .bar-section{grid-template-columns:1fr;}
+  .chronotype-section{grid-template-columns:1fr;}
+  .ct-cell{border-right:none;border-bottom:1px solid var(--border-subtle);}
+  .ct-cell:last-child{border-bottom:none;}
+  .takeaway-section{grid-template-columns:1fr;padding:28px 24px;}
+  .takeaway-num{font-size:clamp(60px,12vw,90px);}
+  .header{grid-template-columns:1fr;}
+  .header-right{text-align:left;}
+}
+@media(max-width:600px){
+  .timeline-grid{grid-template-columns:1fr;}
+  .main-title{font-size:clamp(36px,9vw,56px);}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="header anim-1">
+    <div class="header-left">
+      <div class="meta-tag">Neuroscience · Chronobiology</div>
+      <h1 class="main-title">大脑的<em>生物钟</em><br>昼夜节律</h1>
+    </div>
+    <div class="header-right">
+      <div class="subtitle">
+        典型作息参考<br>
+        07:00 起床 · 23:00 入睡<br>
+        — 24h 认知节律图谱 —
+      </div>
+    </div>
+  </header>
+
+  <!-- 曲线图 -->
+  <section class="chart-section anim-2">
+    <div class="section-label">Alertness / Cognitive Load Curve — 24 hours</div>
+    <div class="chart-wrap">
+      <!-- 标注带 -->
+      <svg class="chart-svg" viewBox="0 0 1000 148" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- 区域背景色带 -->
+        <!-- 0-6h (0-250px) 深夜 -->
+        <rect x="0" y="0" width="83" height="148" fill="rgba(10,10,10,0.06)"/>
+        <!-- 8-11h 峰值区 -->
+        <rect x="125" y="0" width="125" height="148" fill="rgba(0,47,167,0.08)"/>
+        <!-- 13-15h 低谷 -->
+        <rect x="208" y="0" width="83" height="148" fill="rgba(180,30,30,0.06)"/>
+        <!-- 15-17h 下午恢复 -->
+        <rect x="291" y="0" width="83" height="148" fill="rgba(0,47,167,0.05)"/>
+
+        <!-- 水平基准线 -->
+        <line x1="0" y1="110" x2="1000" y2="110" stroke="#d4d4d2" stroke-width="1"/>
+        <line x1="0" y1="75" x2="1000" y2="75" stroke="#d4d4d2" stroke-width=".5" stroke-dasharray="4,4"/>
+        <line x1="0" y1="40" x2="1000" y2="40" stroke="#d4d4d2" stroke-width=".5" stroke-dasharray="4,4"/>
+
+        <!-- 标签 HIGH / MID / LOW -->
+        <text x="6" y="37" font-family="JetBrains Mono,monospace" font-size="7" fill="#a3a3a3" letter-spacing="1">HIGH</text>
+        <text x="6" y="72" font-family="JetBrains Mono,monospace" font-size="7" fill="#a3a3a3" letter-spacing="1">MID</text>
+        <text x="6" y="107" font-family="JetBrains Mono,monospace" font-size="7" fill="#a3a3a3" letter-spacing="1">LOW</text>
+
+        <!-- 警觉性主曲线 (蓝色) -->
+        <!-- 时间映射: 6:00=x0 → 23:00=x1000, 17h=1000px, 每小时~58.8px -->
+        <!-- 关键点: 6:00(0,120) 8:00(118,55) 11:00(294,38) 13:00(412,95) 15:00(530,58) 17:00(648,65) 19:00(765,90) 21:00(883,50) 23:00(1000,115) -->
+        <path class="wave-path"
+          d="M 0,118
+             C 40,115 80,90 118,50
+             C 156,18 200,30 294,35
+             C 340,38 380,70 412,98
+             C 444,118 490,115 530,55
+             C 565,30 605,55 648,65
+             C 690,72 730,85 765,92
+             C 800,98 840,65 883,48
+             C 910,38 950,85 1000,118"
+          fill="none"
+          stroke="#002FA7"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+
+        <!-- 峰值标注点 -->
+        <circle cx="206" cy="35" r="4" fill="#002FA7" opacity="0"/>
+        <circle cx="206" cy="35" r="4" fill="#002FA7">
+          <animate attributeName="opacity" from="0" to="1" begin="2.2s" dur=".4s" fill="freeze"/>
+        </circle>
+        <text x="210" y="30" font-family="JetBrains Mono,monospace" font-size="8" fill="#002FA7" opacity="0">
+          PEAK
+          <animate attributeName="opacity" from="0" to="1" begin="2.4s" dur=".3s" fill="freeze"/>
+        </text>
+
+        <!-- 低谷标注点 -->
+        <circle cx="412" cy="98" r="4" fill="#B06020" opacity="0">
+          <animate attributeName="opacity" from="0" to="1" begin="2.2s" dur=".4s" fill="freeze"/>
+        </circle>
+        <text x="416" y="94" font-family="JetBrains Mono,monospace" font-size="8" fill="#B06020" opacity="0">
+          DIP
+          <animate attributeName="opacity" from="0" to="1" begin="2.4s" dur=".3s" fill="freeze"/>
+        </text>
+
+        <!-- 垂直分隔线 每2小时 -->
+        <line x1="118" y1="0" x2="118" y2="148" stroke="#e0e0e0" stroke-width=".8"/>
+        <line x1="236" y1="0" x2="236" y2="148" stroke="#e0e0e0" stroke-width=".8"/>
+        <line x1="353" y1="0" x2="353" y2="148" stroke="#e0e0e0" stroke-width=".8"/>
+        <line x1="471" y1="0" x2="471" y2="148" stroke="#e0e0e0" stroke-width=".8"/>
+        <line x1="589" y1="0" x2="589" y2="148" stroke="#e0e0e0" stroke-width=".8"/>
+        <line x1="706" y1="0" x2="706" y2="148" stroke="#e0e0e0" stroke-width=".8"/>
+        <line x1="824" y1="0" x2="824" y2="148" stroke="#e0e0e0" stroke-width=".8"/>
+        <line x1="941" y1="0" x2="941" y2="148" stroke="#e0e0e0" stroke-width=".8"/>
+      </svg>
+
+      <!-- 时间轴 -->
+      <div class="chart-axis">
+        <span class="time-tick" style="left:0%">06:00</span>
+        <span class="time-tick" style="left:11.8%">08:00</span>
+        <span class="time-tick" style="left:29.4%">11:00</span>
+        <span class="time-tick" style="left:41.2%">13:00</span>
+        <span class="time-tick" style="left:52.9%">15:00</span>
+        <span class="time-tick" style="left:64.7%">17:00</span>
+        <span class="time-tick" style="left:76.5%">19:00</span>
+        <span class="time-tick" style="left:88.2%">21:00</span>
+        <span class="time-tick" style="left:100%">23:00</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 时间段详情格 -->
+  <section class="timeline-section anim-3">
+    <div class="section-label" style="margin-bottom:0;padding-bottom:12px;border-bottom:1px solid var(--border-subtle);">Hourly Brain States — 8 Windows</div>
+    <div class="timeline-grid">
+
+      <!-- 1: 6-8 自然唤醒 -->
+      <div class="tl-cell">
+        <div class="tl-time">06:00 – 08:00</div>
+        <span class="tl-icon">☀️</span>
+        <div class="tl-label">自然唤醒窗口</div>
+        <div class="tl-brain">皮质醇 ↑ · 褪黑素 ↓</div>
+        <div class="tl-desc">逻辑能力逐渐恢复，不宜立刻投入高难度认知任务</div>
+      </div>
+
+      <!-- 2: 8-11 前额叶峰值 (accent 高亮) -->
+      <div class="tl-cell accent-cell">
+        <div class="tl-time" style="color:rgba(255,255,255,.55)">08:00 – 11:00</div>
+        <span class="tl-icon" style="color:#fff;font-size:22px">🧠</span>
+        <div class="tl-label" style="color:#fff;font-size:14px">前额叶皮层峰值</div>
+        <div class="tl-brain" style="color:rgba(255,255,255,.65)">Prefrontal Cortex — Peak</div>
+        <div class="tl-desc" style="color:rgba(255,255,255,.8);font-weight:400">✦ 最佳时段 — 写代码、数学推导、重要决策、深度分析</div>
+      </div>
+
+      <!-- 3: 11-13 警觉下降 -->
+      <div class="tl-cell">
+        <div class="tl-time">11:00 – 13:00</div>
+        <span class="tl-icon" style="color:var(--grey-3)">📋</span>
+        <div class="tl-label">过渡期·轻认知</div>
+        <div class="tl-brain">血糖波动 · 警觉性 ↓</div>
+        <div class="tl-desc">适合自动化任务、邮件处理、低认知负荷工作</div>
+      </div>
+
+      <!-- 4: 13-15 午后低谷 -->
+      <div class="tl-cell" style="background:rgba(180,30,30,0.04);">
+        <div class="tl-time">13:00 – 15:00</div>
+        <span class="tl-icon" style="color:#B06020">😴</span>
+        <div class="tl-label">午后低谷</div>
+        <div class="tl-brain">Post-lunch Dip · 与进食无关</div>
+        <div class="tl-desc">警觉性自然下降，这是昼夜节律决定的生理低谷</div>
+      </div>
+
+      <!-- 5: 15-17 下午恢复 -->
+      <div class="tl-cell">
+        <div class="tl-time">15:00 – 17:00</div>
+        <span class="tl-icon" style="color:#4A7FC0">💡</span>
+        <div class="tl-label">发散性思维恢复</div>
+        <div class="tl-brain">警觉性二次爬升</div>
+        <div class="tl-desc">适合头脑风暴、创意型任务、跨领域联想</div>
+      </div>
+
+      <!-- 6: 17-19 体温峰值 -->
+      <div class="tl-cell">
+        <div class="tl-time">17:00 – 19:00</div>
+        <span class="tl-icon" style="color:#C05020">🏃</span>
+        <div class="tl-label">体温峰值·运动最佳</div>
+        <div class="tl-brain">Core Temp Peak · 协调力 ↑</div>
+        <div class="tl-desc">力量、速度、运动协调能力均达全天最高点</div>
+      </div>
+
+      <!-- 7: 19-21 褪黑素上升 -->
+      <div class="tl-cell dark-cell">
+        <div class="tl-time">19:00 – 21:00</div>
+        <span class="tl-icon" style="color:var(--accent-bright)">📚</span>
+        <div class="tl-label" style="color:var(--paper)">复习·巩固窗口</div>
+        <div class="tl-brain">褪黑素开始分泌 ↑</div>
+        <div class="tl-desc">记忆巩固效果好，适合回顾白天所学内容</div>
+      </div>
+
+      <!-- 8: 21-23 离线整理 -->
+      <div class="tl-cell dark-cell">
+        <div class="tl-time">21:00 – 23:00</div>
+        <span class="tl-icon" style="color:var(--accent-bright)">🌙</span>
+        <div class="tl-label" style="color:var(--paper)">"离线整理"模式</div>
+        <div class="tl-brain">分析力 ↓ · 创造力可 ↑</div>
+        <div class="tl-desc">默认模式网络活跃，灵感涌现但不宜强迫逻辑推演</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 警觉度条形图 + 推荐任务 -->
+  <section class="bar-section anim-4">
+    <div class="bar-group">
+      <div class="bar-group-title">Alertness Index — 相对警觉性指数</div>
+      <div class="bar-row">
+        <div class="bar-time">06–08</div>
+        <div class="bar-track"><div class="bar-fill mid" style="width:42%"></div></div>
+        <div class="bar-val">42</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-time">08–11</div>
+        <div class="bar-track"><div class="bar-fill peak" style="width:95%"></div></div>
+        <div class="bar-val">95</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-time">11–13</div>
+        <div class="bar-track"><div class="bar-fill mid" style="width:65%"></div></div>
+        <div class="bar-val">65</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-time">13–15</div>
+        <div class="bar-track"><div class="bar-fill low" style="width:30%"></div></div>
+        <div class="bar-val">30</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-time">15–17</div>
+        <div class="bar-track"><div class="bar-fill high" style="width:72%"></div></div>
+        <div class="bar-val">72</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-time">17–19</div>
+        <div class="bar-track"><div class="bar-fill mid" style="width:60%"></div></div>
+        <div class="bar-val">60</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-time">19–21</div>
+        <div class="bar-track"><div class="bar-fill mid" style="width:52%"></div></div>
+        <div class="bar-val">52</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-time">21–23</div>
+        <div class="bar-track"><div class="bar-fill low" style="width:35%"></div></div>
+        <div class="bar-val">35</div>
+      </div>
+    </div>
+
+    <div class="bar-group">
+      <div class="bar-group-title">Recommended Task Type — 最佳任务匹配</div>
+      <div style="display:flex;flex-direction:column;gap:10px;padding-top:4px;">
+
+        <div style="display:grid;grid-template-columns:72px 1fr;gap:12px;align-items:start;padding:12px 0;border-bottom:1px solid var(--border-subtle);">
+          <div style="font-family:var(--mono);font-size:9.5px;color:var(--text-helper);letter-spacing:.08em;padding-top:2px;">08–11</div>
+          <div>
+            <div style="font-weight:600;font-size:12px;color:var(--accent);margin-bottom:4px;">⚡ 深度认知任务</div>
+            <div style="font-size:11.5px;font-weight:300;color:var(--text-secondary);line-height:1.5;">写代码 · 数学推导 · 产品决策 · 复杂文档写作</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:72px 1fr;gap:12px;align-items:start;padding:12px 0;border-bottom:1px solid var(--border-subtle);">
+          <div style="font-family:var(--mono);font-size:9.5px;color:var(--text-helper);letter-spacing:.08em;padding-top:2px;">11–13</div>
+          <div>
+            <div style="font-weight:600;font-size:12px;margin-bottom:4px;">📧 轻量事务</div>
+            <div style="font-size:11.5px;font-weight:300;color:var(--text-secondary);line-height:1.5;">回邮件 · 会议 · 审批 · 例行沟通</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:72px 1fr;gap:12px;align-items:start;padding:12px 0;border-bottom:1px solid var(--border-subtle);">
+          <div style="font-family:var(--mono);font-size:9.5px;color:var(--text-helper);letter-spacing:.08em;padding-top:2px;">13–15</div>
+          <div>
+            <div style="font-weight:600;font-size:12px;margin-bottom:4px;color:var(--grey-3);">☕ 休息 / 低强度</div>
+            <div style="font-size:11.5px;font-weight:300;color:var(--text-secondary);line-height:1.5;">午休 · 散步 · 简单归档整理</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:72px 1fr;gap:12px;align-items:start;padding:12px 0;border-bottom:1px solid var(--border-subtle);">
+          <div style="font-family:var(--mono);font-size:9.5px;color:var(--text-helper);letter-spacing:.08em;padding-top:2px;">15–17</div>
+          <div>
+            <div style="font-weight:600;font-size:12px;margin-bottom:4px;">💡 创意型任务</div>
+            <div style="font-size:11.5px;font-weight:300;color:var(--text-secondary);line-height:1.5;">头脑风暴 · 设计 · 内容创作 · 灵感收集</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:72px 1fr;gap:12px;align-items:start;padding:12px 0;border-bottom:1px solid var(--border-subtle);">
+          <div style="font-family:var(--mono);font-size:9.5px;color:var(--text-helper);letter-spacing:.08em;padding-top:2px;">17–19</div>
+          <div>
+            <div style="font-weight:600;font-size:12px;margin-bottom:4px;color:#B06020;">🏃 体力训练</div>
+            <div style="font-size:11.5px;font-weight:300;color:var(--text-secondary);line-height:1.5;">有氧 · 力量 · 球类 · 协调性运动</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:72px 1fr;gap:12px;align-items:start;padding:12px 0;">
+          <div style="font-family:var(--mono);font-size:9.5px;color:var(--text-helper);letter-spacing:.08em;padding-top:2px;">19–23</div>
+          <div>
+            <div style="font-weight:600;font-size:12px;margin-bottom:4px;">📖 复习 / 放松</div>
+            <div style="font-size:11.5px;font-weight:300;color:var(--text-secondary);line-height:1.5;">回顾笔记 · 阅读 · 冥想 · 避免屏幕蓝光</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 时型差异 -->
+  <section class="anim-5" style="margin-bottom:40px;">
+    <div class="section-label" style="margin-bottom:16px;">Chronotype Variation — 个体时型差异</div>
+    <div class="chronotype-section">
+
+      <div class="ct-cell" style="background:var(--accent);color:var(--accent-on);">
+        <span class="ct-icon">🦅</span>
+        <div class="ct-type" style="color:#fff;">晨型 · 百灵鸟</div>
+        <div class="ct-shift" style="color:rgba(255,255,255,.7);">曲线整体前移 1–2 小时</div>
+        <div class="ct-desc" style="color:rgba(255,255,255,.75);">认知峰值出现在 07:00–10:00；夜间很早开始感到困倦。约占人群 25%。</div>
+      </div>
+
+      <div class="ct-cell">
+        <span class="ct-icon">⚖️</span>
+        <div class="ct-type">中间型 · 知更鸟</div>
+        <div class="ct-shift" style="color:var(--accent);">基本符合标准曲线</div>
+        <div class="ct-desc">本图所展示的典型曲线即为中间型参考。峰值在 09:00–11:00，约占人群 50%。</div>
+      </div>
+
+      <div class="ct-cell" style="background:var(--ink);color:var(--paper);">
+        <span class="ct-icon">🦉</span>
+        <div class="ct-type" style="color:var(--paper);">夜型 · 猫头鹰</div>
+        <div class="ct-shift" style="color:var(--accent-bright);">曲线整体后移 1–3 小时</div>
+        <div class="ct-desc" style="color:rgba(250,250,248,.7);">认知峰值出现在 11:00–14:00 甚至更晚；强迫早起严重损耗效率。约占人群 25%。</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 要点 -->
+  <section class="takeaway-section anim-6">
+    <div class="takeaway-num">08–11</div>
+    <div class="takeaway-content">
+      <div class="takeaway-label">Key Insight · 核心结论</div>
+      <div class="takeaway-text">
+        大脑不是一台恒功率的机器。<strong>最难的任务应该在最好的时段完成</strong>——对多数人而言，这是上午 8–11 点。顺应生物钟工作，而非对抗它，是效率最高的工作方式。时型因人而异，<strong>找到自己的峰值窗口比遵循任何外部时间表都更重要</strong>。
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-meta">Brain Circadian Rhythm · 大脑昼夜节律信息图</div>
+    <div class="footer-meta">Based on circadian neuroscience research · 2026</div>
+  </footer>
+
+</div>
+</body>
+</html>
